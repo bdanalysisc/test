@@ -1,0 +1,66 @@
+---
+title: "homework1"
+author: "ZHAO YUJIAO"
+date: '2019-05-06'
+output:
+  html_notebook:
+    fig_caption: yes
+    number_sections: yes
+    toc: yes
+---
+# 读入数据集并查看基本信息
+```{r iris_data, message=FALSE}
+# iris<-read.table("http://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data",header=FALSE,sep=",")
+# uci上的数据集没有名字，故header为FALSE
+# 发现数据集iris系统内置数据集，故注释掉了从uci读取数据集的语句
+class(iris)
+dim(iris)
+names(iris)
+head(iris)
+tail(iris)
+```
+# 利用K-means进行聚类
+```{r iris_kmeans, message=FALSE}
+irisTrain<-iris[,which(names(iris) != "Species")]
+# irisTrain<-iris[,1:4]
+# 首先去除数据集中的分类
+set.seed(1234567)
+# 设置种子
+irisK3<-kmeans(x=irisTrain,centers=3) 
+irisK3 # 查看k-means的聚类结果
+```
+# 设置聚类次数nstart
+```{r iris_nstart, message=FALSE}
+irisK3N25<-kmeans(irisTrain,centers=3,nstart=25)
+irisK3$size
+irisK3N25$size
+```
+# WSS方法确定聚类次数
+```{r iris_k-means, message=FALSE}
+wss<-numeric(15)
+for (k in 1:15) wss[k]<-sum(kmeans(irisTrain,centers=k,nstart=25)$withinss)/10000
+wss
+require(ggplot2)
+wss_df <- data.frame(Number_of_Clusters=1:15, wss)
+ggplot(wss_df,aes(Number_of_Clusters,wss))+
+geom_line(color="blue",size=0.3)+geom_point(color = "black",shape="o",size=3)+
+theme(plot.margin = unit(c(1, 0, 3, 2), "cm"))
+#wss 序列在 k>3 以后变化很慢。
+table(iris$Species,irisK3N25$cluster)
+```
+# GAP统计量
+```{r iris_DAP, message=FALSE}
+require(cluster)
+theGap <- clusGap(irisTrain,FUNcluster = pam, K.max = 20)
+gapDF <- as.data.frame(theGap$Tab)
+gapDF
+ggplot(gapDF,aes(x=1:nrow(gapDF)))+
+geom_line(aes(y=gap),color="red")+
+geom_point(aes(y=gap),color="red")+
+geom_errorbar(aes(ymin=gap-SE.sim, ymax=gap+SE.sim),color="red")+
+labs(x="Number of Clusters",y="Gap")+
+theme(plot.margin = unit(c(1, 0, 3, 2), "cm"))
+#上述结果表明K=1时，GAP最小，有点奇怪
+
+```
+
