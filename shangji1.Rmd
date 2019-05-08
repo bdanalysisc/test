@@ -1,9 +1,0 @@
----
-title: "homework1"
-author: "ZHAO YUJIAO"
-date: '2019-05-06'
-output:
-  html_notebook
-
-```
-
