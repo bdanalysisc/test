@@ -23,6 +23,8 @@ knitr::kable(
   data.frame(NAME,WORK),
   caption = "WORK DISTRIBUTION",
   align = "l"
+#表格生成器
+#kable(x, format, digits = getOption("digits"), row.names = NA, col.names = NA, align, caption = NULL, label = NULL, format.args = list(), escape = TRUE, ...)
 )
 ```
 
@@ -40,10 +42,7 @@ knitr::kable(
 ```{r ability, echo=FALSE}
 library(ggplot2)
 ability <- data.frame(collection=c(8,5,5),visualization=c(7,6,6),machine_learning=c(4,4,5),computer_science=c(6,7,6),statistic=c(6,5,7),math=c(4,6,6),row.names=c("曹霞","黄雅雯","赵玉娇"))
-#opar <- par(no.readonly = TRUE)
-#par(mai=c(5,4,6,8)+0.1)
 barplot(as.matrix(ability),col=cm.colors(5),names.arg=c("资料搜集","数据可视化","机器学习","计算机科学","统计学","数学"),legend=rownames(ability),args.legend=c(x=8,y=22.1),cex.names = 0.7,xlab="团队技能")
-
 
 ```
 
