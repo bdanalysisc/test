@@ -46,26 +46,6 @@ barplot(as.matrix(ability),col=cm.colors(5),names.arg=c("资料搜集","数据�
 
 ```
 
-# **数据预处理**
-
-```{r read_data,message=FALSE}
-library(tidyverse)
-setwd("C:/Users/16401/Desktop/Happiness_forecast")
-data<-read.csv("happiness_train_clean.csv")
-for (i in seq_along(data))
-{
-  if(length(table(data[[i]]))<35)
-    data[[i]]<-factor(data[[i]])
-}
-data$id<-as.character(data$id)
-data$family_m<-as.integer(data$family_m)
-data$house<-as.integer(data$house)
-data$car<-as.integer(data$car)
-
-data
-summary(data)
-```
-
 # 数据来源
 ## 下载来源
 　　数据下载来源为阿里云天池大数据竞赛新人赛，赛题为“快来一起挖掘幸福感！”下载地址：https://tianchi.aliyun.com/competition/entrance/231702/information (下载前需登陆报名)
@@ -139,7 +119,11 @@ tail(data)   #tail()输出数据框的后5行
 data_index<-read.csv("happiness_index_1.csv")
 data_index
 ```
-      
+4.  查看数据维度   
+
+```{r}
+dim(data)
+```      
 
 ##  解析变量       
 
@@ -310,7 +294,11 @@ data_2<-data_2%>%mutate(family_m=ifelse(is.na(family_m)|family_m<0,-8,family_m))
 #将house中的NA值更改为-8(无法回答)
 data_2<-data_2%>%mutate(house=ifelse(house<0,-8,house))
 ```
-   
+##查看处理后数据维度
+
+```{r}
+dim(data_2)
+```
 ## summary()
 
 ```{r}
