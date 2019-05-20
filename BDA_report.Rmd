@@ -1,6 +1,6 @@
 ---
 title: "BDA_report"
-author: "CX"
+author: "曹霞 黄雅雯 赵玉娇"
 date: "2019/5/18"
 output:
   html_document:
