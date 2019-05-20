@@ -45,6 +45,9 @@ knitr::kable(
   
 团队知识结构如下图所示：
 
+## **协同方式**
+-  Github
+-  实时讨论、及时沟通
 
 ```{r ability, echo=FALSE}
 ability <- data.frame(collection=c(8,5,5),visualization=c(7,6,6),machine_learning=c(4,4,5),computer_science=c(6,7,6),statistic=c(6,5,7),math=c(4,6,6),row.names=c("曹霞","黄雅雯","赵玉娇"))
@@ -643,7 +646,7 @@ happiness_meanp <- within(happiness_meanp,{
   )
 
 #查看各省份幸福感均值
-happiness_meanp(c(1,3,2))
+happiness_meanp[c(1,3,2)]
 ```
 -  由表可知，广西壮族自治区的幸福感均值最低为3.623188，河北省幸福感均值最高为4.107143，但总体幸福感相差不大。
 
