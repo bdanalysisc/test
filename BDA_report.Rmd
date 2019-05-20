@@ -46,34 +46,34 @@ barplot(as.matrix(ability),col=cm.colors(5),names.arg=c("资料搜集","数据�
 
 ```
 
-# 数据来源
-## 下载来源
+# **数据来源**
+## **下载来源**
 　　数据下载来源为阿里云天池大数据竞赛新人赛，赛题为“快来一起挖掘幸福感！”下载地址：https://tianchi.aliyun.com/competition/entrance/231702/information (下载前需登陆报名)
   
-## 原始出处
+## **原始出处**
 　　赛题所用数据的最初来源为中国人民大学中国调查与数据中心主持之《中国综合社会调查（CGSS）》项目2015年度的调查问卷，从中选取了多组变量，包括个体变量（性别、年龄、地域、职业、健康、婚姻与政治面貌等等）、家庭变量（父母、配偶、子女、家庭资本等等）、社会态度（公平、信用、公共服务等等）以及幸福感水平。  
 　　中国综合社会调查（Chinese General Social Survey，CGSS），是中国第一个全国性、综合性、连续性的大型社会调查项目。目的是通过定期、系统地收集中国人与中国社会各个方面的数据，总结社会变迁的长期趋势，探讨具有重大理论和现实意义的社会议题，推动国内社会科学研究的开放性与共享性，为政府决策与国际比较研究提供数据资料。
   
-# 研究背景
-## 历史背景
+# **研究背景**
+## **历史背景**
 >　　国际上对幸福感的研究起始于二战后，从20世纪60年代逐步发展起来。Easterlin（1974，2010）最先研究了幸福与收入之间的关系，提出了“幸福悖论”，也称为“伊斯特林悖论”，即随着物质产品的丰富和收入水平的提升，人们并没有感觉更幸福，这类似一架“快乐水车”，尽管收入增长，但是幸福却没有同步增长。一个国家的主观幸福感随着经济发展上升到一定程度时，可能出现停滞或下降状态。随着时代的发展，“幸福悖论”也逐渐适用于中国。改革开放40年来，我国GDP持续高速增长，绝大多数居民的生活条件从根本上得到了改善，但是并无证据表明我国居民的幸福感呈现出与经济增长相匹配的提升。因此有必要对中国居民的幸福感进行研究。  
     <p align="right">[*"户籍身份、社会分割与居民幸福感——基于不同影响机制的实证研究"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2019&filename=JJXJ201901012&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDM2MDZHNEg5ak1ybzlFWm9SOGVYMUx1eFlTN0RoMVQzcVRyV00xRnJDVVJMT2ZZdWRuRnlybFVyN0pMeWZUWkw=)</p>
   
-## 政治背景
+## **政治背景**
 >　　党的十九大报告还特别强调了要把人民群众对美好生活的向往作为永远的奋斗目标，把人民的幸福快乐作为实现中国梦的重要标准，要让人们的幸福感、安全感、获得感更有保障、更充实、 更可持续。如何实现居民幸福感的提升，是各级政府进行社会治理工作需要关注的重要问题
     <p align="right">[*"中国居民的生活方式与主观幸福感研究 ———基于 CGSS2015 数据的实证分析"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDPREP&filename=GHXY201901036&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDUwMDNMdXhZUzdEaDFUM3FUcldNMUZyQ1VSTE9mWXVkbkZ5cm1VcnZMSWlYVGQ3RzRIOWpNcm85R1lvUjhlWDE=)</p>
   
-## 经济背景
+## **经济背景**
 >　　“幸福感数据”被广泛应用于分析微观经济现象和对非市场商品的价值评估中（如健康状况、气候和噪音代价等），同时幸福感可能是经济结果的决定因素：它提高了生产力，预示了未来收入，影响了劳动力市场的表现。越来越多的幸福感研究表明，性格特征在理解幸福感和经济结果间联系方面起着重要作用。同时，相当数量的实证研究表明，幸福感更高的个体通常在工作中有更佳的表现，且在求职过程中也更为顺利
     <p align="right">[*"经济学家为什么研究幸福感？"*](https://mp.weixin.qq.com/s/8Uahhbi6AfRWz6w6WZxqIg)</p>
   
-## 社会认知背景
+## **社会认知背景**
 >　　Akerlof 和Kranton将身份定义为一种社会类别的归属感，同时考虑到该类别中的人应如何行事。例如，一种社会分类是按性别分类，性别身份认同不仅会对男女教育程度差异、性别工资差异产生影响，也会对家庭中家务劳动和家庭权利的分配产生影响，从而影响处于婚姻中个体的生活幸福感。
   <p align="right">[*"家庭内部相对收入、性别身份认同与中国居民生活幸福感——基于CGSS数据的实证研究"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2018&filename=JJPL201806010&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDc4ODV4WVM3RGgxVDNxVHJXTTFGckNVUkxPZll1ZG5GeXJtVWJ6Tkx5ZmJZckc0SDluTXFZOUVaSVI4ZVgxTHU=)</p>
 　　信仰和价值观对于主观幸福感的影响是不容忽视的，弗洛伊德认为，宗教信仰对个体的思想和行为具有引导功能，宗教文化在精神上的保护功能有利于使得人类感知到幸福。
   <p align="right">[*"宗教信仰、社会支持与居民幸福感——基于CGSS2015数据的实证研究"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2018&filename=RELI201803017&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MjMyMTN5cm1Wci9KTnlqSFo3RzRIOW5Nckk5RVk0UjhlWDFMdXhZUzdEaDFUM3FUcldNMUZyQ1VSTE9mWXVkbkY=)</p>
   
-## 现实背景
+## **现实背景**
 >　　据联合国发布的《世界幸福报告》显示,在156个受调查的国家中,2016-2018年中国的幸福感排名93，2010年起我国GDP总量已经超过日本, 成为仅次于美国的世界第二大经济体,但居民的幸福感排名却落后于大多数国家。
 
 ```{r}
