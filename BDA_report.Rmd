@@ -96,22 +96,23 @@ rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 ```
 
     <p align="right">[*《世界幸福报告》*](https://s3.amazonaws.com/happiness-report/2019/WHR19.pdf)</p>
-  
- # 数据预处理
 
-## 数据观测    
+
+# **数据预处理**
+
+## **数据观测**    
 
 1.  读入数据
 ```{r}
 setwd("D:/RStudio_work")
 library(tidyverse)
-data<-read.csv("happiness_train_abbr.csv")
+data_original<-read.csv("happiness_train_abbr.csv")
 ```
  
 2.  简单观测data的头和尾
 ```{r}
-head(data)   #head()输出数据框的前5行
-tail(data)   #tail()输出数据框的后5行
+head(data_original)   #head()输出数据框的前5行
+tail(data_original)   #tail()输出数据框的后5行
 ```
 3.  读入变量的含义    
 
@@ -119,23 +120,25 @@ tail(data)   #tail()输出数据框的后5行
 data_index<-read.csv("happiness_index_1.csv")
 data_index
 ```
-4.  查看数据维度   
+       
+4.  查看数据维度  
 
 ```{r}
-dim(data)
-```      
+dim(data_original)
+```
 
-##  解析变量       
 
-1.  观察data中变量的类型
+##  **解析变量**       
+
+1.  观察data_original中变量的类型
 ```{r}
-type<-vector("character",ncol(data))
+type<-vector("character",ncol(data_original))
 #将每列变量的类型存放到type里
-for (i in seq_along(data))
+for (i in seq_along(data_original))
 {
-  type[i]<-class(data[[i]])
+  type[i]<-class(data_original[[i]])
 }
-date_type<-data.frame(names=colnames(data),type=type)
+date_type<-data.frame(names=colnames(data_original),type=type)
 date_type
 #变量在使用前需要初始化
 #vector(mode="logical",length=0):构建一个指定类型和长度的向量
@@ -152,7 +155,7 @@ date_type
 3.   转化变量的类型
 ```{r}
 #通过观察,将“不重复取值的个数”<35的变量转化为因子型变量
-data_1<-data
+data_1<-data_original
 for (i in seq_along(data_1))
 {
   if(length(table(data_1[[i]]))<35)
@@ -190,19 +193,19 @@ data_1$car<-as.integer(data_1$car)
 
 5.  查看每个变量的取值情况
 ```{r}
-#观察data中每个变量的频次分布,将其放入列表中
+#观察data_1中每个变量的频次分布,将其放入列表中
 #list:每个变量的长度数据类型和长度可以不一致
 i<-2
 mylist<-list()
-for (i in seq_along(data))
+for (i in seq_along(data_1))
 {
-  mylist[[i]]<-table(data[[i]])
+  mylist[[i]]<-table(data_1[[i]])
 }
-names(mylist)<-colnames(data)
+names(mylist)<-colnames(data_1)
 #mylist 因为数据太长,故不展示
 ```
    
-##  数据处理
+##  **数据处理**
 
 1.  删去记录       
 
@@ -215,7 +218,7 @@ mylist[["happiness"]]
 通过观察happiness的取值情况，我们发现有12个记录的happiness取值为-8(无法回答),故删去这12条记录   
    
 ```{r}
-data_2<-filter(data_1,happiness!=-8)
+data<-filter(data_1,happiness!=-8)
 #filter(data= ,var1= ,...):基于观测的值筛选出一个数据子集
 ```
      
@@ -228,7 +231,7 @@ mylist[["county"]]
 通过观察,我们发现city与county中相同取值的观测个数太少,粒度太细,故删去city和county.选取province作为地域的区分
 
 ```{r}
-data_2 <- subset(data_2, select = -c(city,county))
+data <- subset(data, select = -c(city,county))
 #subset():选取子集
 #select():选择列,-代表不选择该列
 ```
@@ -239,19 +242,19 @@ data_2 <- subset(data_2, select = -c(city,county))
    通过survey_time和birth变量，我们可以求得被调查对象的年龄age.
 ```{r}
 library(lubridate)
-survey_year<-year(data_2$survey_time)
-data_2$age<-survey_year-data_2$birth
+survey_year<-year(data$survey_time)
+data$age<-survey_year-data$birth
 #删去survey_time和birth变量
-data_2 <- subset(data_2, select = -c(survey_time,birth))
+data <- subset(data, select = -c(survey_time,birth))
 #lubridate包处理时间数据
 ```
   
 (2)BMI  
    通过height_cm和weight_jin变量，我们可以求得被调查对象的BMI(体质指数)
 ```{r}
-data_2$BMI<-(data_2$weight_jin/2)/(data_2$height_cm/100)^2
+data$BMI<-(data$weight_jin/2)/(data$height_cm/100)^2
 #删去height_cm和weight_jin变量
-data_2 <- subset(data_2, select = -c(height_cm,weight_jin))
+data <- subset(data, select = -c(height_cm,weight_jin))
 ```
 
 
@@ -264,7 +267,7 @@ head(mylist[["income"]])
    
    income中存在-1(不适用),-2(不知道),-3(拒绝回答)的取值,我们将这些取值统一为-8(无法回答)
 ```{r}
-data_2<-data_2%>%mutate(income=ifelse(income<0,-8,income))
+data<-data%>%mutate(income=ifelse(income<0,-8,income))
 # %>%:把左边的值发送给右边的表达式,并作为右边表达式函数的第一个参数.例:x%>%f(y)会变成f(x, y),x%>%f(y)%>%g(z)会变成g(f(x, y),z).
 # mutate():构造新的变量
 ```
@@ -274,13 +277,13 @@ data_2<-data_2%>%mutate(income=ifelse(income<0,-8,income))
   将这些变量的NA值均修改为-8(无法回答)
 ```{r}
 #将work_status中的NA值改为-8(无法回答)
-data_2<-data_2%>%mutate(work_status=ifelse(is.na(work_status),-8,work_status))
+data<-data%>%mutate(work_status=ifelse(is.na(work_status),-8,work_status))
 #将work_yr中的NA值改为-8(无法回答)
-data_2<-data_2%>%mutate(work_yr=ifelse(is.na(work_yr)|work_yr<0,-8,work_yr))
+data<-data%>%mutate(work_yr=ifelse(is.na(work_yr)|work_yr<0,-8,work_yr))
 #work_type中的NA值改为-8(无法回答)
-data_2<-data_2%>%mutate(work_type=ifelse(is.na(work_type),-8,work_type))
+data<-data%>%mutate(work_type=ifelse(is.na(work_type),-8,work_type))
 #work_manage中的NA值改为-8(无法回答)
-data_2<-data_2%>%mutate(work_manage=ifelse(is.na(work_manage),-8,work_manage))
+data<-data%>%mutate(work_manage=ifelse(is.na(work_manage),-8,work_manage))
 ```
   
 (3)family_income&family_m&house   
@@ -288,22 +291,108 @@ data_2<-data_2%>%mutate(work_manage=ifelse(is.na(work_manage),-8,work_manage))
    将这些变量的NA值和-1,-2,-3更改为-8(无法回答)
 ```{r}
 #将family_income中的NA值和-1,-2,-3更改为-8(无法回答)
-data_2<-data_2%>%mutate(family_income=ifelse(is.na(family_income)|family_income<0,-8,family_income))
+data<-data%>%mutate(family_income=ifelse(is.na(family_income)|family_income<0,-8,family_income))
 #将family_m中的NA值和-1,-2,-3更改为-8(无法回答)
-data_2<-data_2%>%mutate(family_m=ifelse(is.na(family_m)|family_m<0,-8,family_m))
+data<-data%>%mutate(family_m=ifelse(is.na(family_m)|family_m<0,-8,family_m))
 #将house中的NA值更改为-8(无法回答)
-data_2<-data_2%>%mutate(house=ifelse(house<0,-8,house))
+data<-data%>%mutate(house=ifelse(house<0,-8,house))
 ```
-##查看处理后数据维度
+   
+## **数据摘要**
 
 ```{r}
-dim(data_2)
+dim(data)
 ```
-## summary()
+
 
 ```{r}
-summary(data_2)
+summary(data)
 ```
+
+#  **探索性分析EDA**     
+
+```{r}
+ggplot(data,aes(x=happiness,fill=happiness))+geom_bar()+theme(aspect.ratio = 1)+coord_polar()
+```
+
+
+## **宗教信仰与幸福感**   
+
+**探索religion(宗教信仰)和religion_freq(参加宗教的频繁程度)与happiness的关联**  
+
+```{r}
+#根据religion与happiness绘制热度图
+p1<-data %>% count(religion,happiness) %>%ggplot(mapping=aes(religion,happiness))+geom_tile(mapping=aes(fill=n))+labs(title=("religion & happiness"))+theme(plot.title = element_text(hjust = 0.5)) 
+#用labs()添加标题
+#用theme()将标题居中
+```
+
+
+```{r}
+#根据religion_freq(参加宗教的频繁程度)和happiness绘制分组条形图
+p2<-ggplot(data,aes(x=happiness,fill=religion_freq))+geom_bar(stat="count",position = "dodge",width=0.5)+geom_text(stat="count", aes(label=..count..),position=position_dodge(width=0.5),size=1.5)+xlab("happiness")+ylab("count")+labs(title=("religion_freq & happiness"))+theme(plot.title = element_text(hjust = 0.5)) 
+#position="dodge":将每组中的条形图依次并列放置.
+```
+
+
+```{r fig.width=10,fig.height=3}
+#将两张图合并为一张
+library(ggpubr)
+ggarrange(p1,p2,ncol=2,labels=c("(1)","(2)"))
+```
+       
+-  通过图(1),我们可知有宗教信仰的人幸福感更高.通过图(2),我们可知每个等级的幸福感的人都基本不参加宗教活动,故幸福感与参加宗教活动的频繁程度没有太大关联.
+
+##  **生活方式与幸福感**   
+
+**探索以下生活方式socialize(社交的频率),relax(休闲放松的频率),learn(学习充电的频率)与happiness的关联**
+
+```{r}
+library(fmsb)
+#将happiness,socialize,relax,learn先转化成数值型变量,便于求平均值
+data_habbit<-data
+data_habbit$happiness<-as.integer(data_habbit$happiness)
+data_habbit$socialize<-as.integer(data_habbit$socialize)
+data_habbit$relax<-as.integer(data_habbit$relax)
+data_habbit$learn<-as.integer(data_habbit$learn)
+#分组统计happiness的均值
+AvY<-aggregate(data_habbit[,17:19],by=list(data_habbit[,2]),FUN=mean)
+#绘制雷达图
+radarchart(df=AvY[,2:4],pty=20,plty=8,plwd =2, cglty = 1,cglcol="grey",title = "lifestyle & happiness",vlcex=1,seg=3,maxmin=FALSE,vlabels=colnames(data_habbit[,17:19]),pcol=topo.colors(5),cglwd=0.5,axistype=0)+theme(plot.title = element_text(hjust = 0.5)) 
+legend("topright",legend=c("1","2","3","4","5"),col=topo.colors(5),lwd=0.5,inset=c(0.25,0),cex=0.35)
+```
+       
+-  通过三维雷达图我们可以看出,积极进行社交、休闲放松和学习充电的人幸福感更高,且参与程度越频繁,幸福感越高.   
+  
+## **家庭状况与幸福感**  
+
+**探索婚姻状况(marital)与happiness的关联**
+
+```{r}
+data_H<-data
+data_H$happiness<-as.integer(data_H$happiness)
+AvH<-aggregate(data_H[["happiness"]],by=list(data_H[,32]),FUN=mean)
+ggplot(AvH,aes(x=AvH[[1]],y=AvH[[2]]))+geom_point()+labs(title=("marital & happiness"))+theme(plot.title = element_text(hjust = 0.5))+xlab("marital")+ylab("avg_happiness") 
+```
+   
+
+-  从图中可以看出2(同居)和3(初婚有婚配)的人幸福感高,5(分居未离婚)和6(离婚)的人幸福感较低,可见婚姻状况对幸福感有着明显的影响.      
+
+
+**探索住房面积(floor_area)与happiness的关联**
+
+```{r}
+library(vioplot)
+H1<-data$floor_area[data$happiness=='1']
+H2<-data$floor_area[data$happiness=='2']
+H3<-data$floor_area[data$happiness=='3']
+H4<-data$floor_area[data$happiness=='4']
+H5<-data$floor_area[data$happiness=='5']
+vioplot(H1,H2,H3,H4,H5,col="gold")
+title("Floor_area & Happiness",xlab="happiness",ylab="floor_area")
+```
+     
+-   通过该图,我们看出住房面积与幸福感不太相关
   
   
   
