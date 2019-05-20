@@ -18,7 +18,8 @@ output:
 
 ## **团队分工**
 
-```{r setup, message=FALSE,echo=FALSE}
+```{r setup, message=FALSE,echo=FALSE,warning=FALSE}
+knitr::opts_chunk$set(warning = FALSE,message = FALSE)
 library(tidyverse)
 library(sjPlot)
 NAME <- c("曹霞","黄雅雯","赵玉娇")
@@ -45,14 +46,14 @@ knitr::kable(
   
 团队知识结构如下图所示：
 
-## **协同方式**
--  Github
--  实时讨论、及时沟通
-
 ```{r ability, echo=FALSE}
 ability <- data.frame(collection=c(8,5,5),visualization=c(7,6,6),machine_learning=c(4,4,5),computer_science=c(6,7,6),statistic=c(6,5,7),math=c(4,6,6),row.names=c("曹霞","黄雅雯","赵玉娇"))
 barplot(as.matrix(ability),col=cm.colors(5),names.arg=c("资料搜集","数据可视化","机器学习","计算机科学","统计学","数学"),legend=rownames(ability),args.legend=c(x=8,y=22.1),cex.names = 0.7,xlab="团队技能")
 ```
+
+## **协同方式**
+-  Github
+-  实时讨论、及时沟通
 
 # **数据来源**
 ## **下载来源**
@@ -88,7 +89,6 @@ barplot(as.matrix(ability),col=cm.colors(5),names.arg=c("资料搜集","数据�
 image_path = "C:/Users/ZYJ/Desktop/happinessdata/dm/image_one.png"  
 rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 ```
-
 　　从2005-2008到2016-2018，中国的幸福感排名增加了0.426，这表明近年来随着政府对民生问题的关注以及相关政策的实施,我国国民幸福感在逐渐提升。但这一表现仍与我国经济增长速度并不匹配。因此, 有必要进一步研究影响国民幸福感的深层次原因。      
 
 ```{r}
@@ -102,9 +102,7 @@ rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 image_path = "C:/Users/ZYJ/Desktop/happinessdata/dm/image_three.png"  
 rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 ```
-
-    <p align="right">[*《世界幸福报告》*](https://s3.amazonaws.com/happiness-report/2019/WHR19.pdf)</p>
-
+  <p align="right">[*《世界幸福报告》*](https://s3.amazonaws.com/happiness-report/2019/WHR19.pdf)</p>
 
 # **数据预处理**
 
@@ -112,7 +110,7 @@ rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 
 1.  读入数据
 ```{r}
-setwd("D:/RStudio_work")
+setwd("C:/Users/ZYJ/Desktop/happinessdata")
 library(tidyverse)
 data_original<-read.csv("happiness_train_abbr.csv")
 ```
@@ -125,7 +123,7 @@ tail(data_original)   #tail()输出数据框的后5行
 3.  读入变量的含义    
 
 ```{r}
-data_index<-read.csv("happiness_index_1.csv")
+data_index<-read.csv("C:/Users/ZYJ/Desktop/happinessdata/happiness_index_1.csv")
 data_index
 ```
        
@@ -668,10 +666,7 @@ ggplot(data,aes(x=edu,fill=edu))+
 
 #查看各教育程度的均值
 ggplot(data = happiness_meane,mapping=aes(x=edu,y=meane))+
-  #geom_point()+
   geom_bar(stat = "identity",fill="steelblue",alpha=2/3)+
-  #scale_y_continuous(limits=c(min(meane)-0.5,max(meane)+0.5))
-  #coord_flip()+
   coord_cartesian(ylim=c(3,5))
 
 ```
