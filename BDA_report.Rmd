@@ -318,7 +318,7 @@ ggplot(data,aes(x=happiness,fill=happiness))+geom_bar()+theme(aspect.ratio = 1)+
 
 ## **宗教信仰与幸福感**   
 
-**探索religion(宗教信仰)和religion_freq(参加宗教的频繁程度)与happiness的关联**  
+**探索宗教信仰(religion)和参加宗教的频繁程度(religion_freq)与幸福感(happiness)的关联**  
 
 ```{r}
 #根据religion与happiness绘制热度图
@@ -345,7 +345,7 @@ ggarrange(p1,p2,ncol=2,labels=c("(1)","(2)"))
 
 ##  **生活方式与幸福感**   
 
-**探索以下生活方式socialize(社交的频率),relax(休闲放松的频率),learn(学习充电的频率)与happiness的关联**
+**探索以下生活方式社交的频率(socialize),休闲放松的频率(relax),学习充电的频率(learn)与幸福感(happiness)的关联**
 
 ```{r}
 library(fmsb)
@@ -366,7 +366,7 @@ legend("topright",legend=c("1","2","3","4","5"),col=topo.colors(5),lwd=0.5,inset
   
 ## **家庭状况与幸福感**  
 
-**探索婚姻状况(marital)与happiness的关联**
+**探索婚姻状况(marital)与幸福感(happiness)的关联**
 
 ```{r}
 data_H<-data
@@ -379,7 +379,7 @@ ggplot(AvH,aes(x=AvH[[1]],y=AvH[[2]]))+geom_point()+labs(title=("marital & happi
 -  从图中可以看出2(同居)和3(初婚有婚配)的人幸福感高,5(分居未离婚)和6(离婚)的人幸福感较低,可见婚姻状况对幸福感有着明显的影响.      
 
 
-**探索住房面积(floor_area)与happiness的关联**
+**探索住房面积(floor_area)与幸福感(happiness)的关联**
 
 ```{r}
 library(vioplot)
