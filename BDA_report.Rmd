@@ -1,0 +1,710 @@
+---
+title: "BDA_report"
+author: "曹霞 黄雅雯 赵玉娇"
+date: "2019/5/18"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+  github_document: default
+  html_notebook:
+    highlight: monochrome
+    number_sections: yes
+    theme: united
+    toc: yes
+---
+
+# **团队成员简介**
+
+## **团队分工**
+
+```{r setup, message=FALSE,echo=FALSE,warning=FALSE}
+knitr::opts_chunk$set(warning = FALSE,message = FALSE)
+library(tidyverse)
+library(sjPlot)
+NAME <- c("曹霞","黄雅雯","赵玉娇")
+STUDENT_NUMBER <- c("201643030","201638058","201629019")
+WORK <- c("1. 搜集有关“幸福感”的背景资料，包含幸福悖论、宗教、性别认同、住房等相关方面的背景  2. 主笔报告团队概况部分  3. 整理GitHub相关学习资料  4. 可视化分析教育、地域、社会认知等方面变量与主观幸福感的关系  5. 建模分析","1. 搜集有关“幸福感”的背景资料，包含政策、世界幸福感排名等相关资料  2. 主笔数据预处理部分  3. 可视化宗教信仰、生活方式、家庭状况等方面变量与主观幸福感的关系  4. 建模分析","1. 搜集有关“幸福感”的背景资料，包含政治、经济等方面的背景 2. 主笔数据来源以及问题背景部分  3. 可视化身心健康、工作就业等变量与主观幸福感的关系  4. 建模分析")
+knitr::kable(
+  data.frame(NAME,STUDENT_NUMBER,WORK),
+  caption = "WORK DISTRIBUTION",
+  align = c("c","l","l")
+) 
+#表格生成器，生成一个完整的成员简介表
+#kable(x, format, digits = getOption("digits"), row.names = NA, col.names = NA, align, caption = NULL, label = NULL, format.args = list(), escape = TRUE, ...)
+
+```
+
+## **成员特长**
+
+- 曹霞
+  - 擅长于搜集资料与数据可视化，机器学习、数学、统计学等相关领域均有知识储备，具有较好的分析能力
+- 黄雅雯
+  - 擅长于数学与计算机科学，机器学习、统计学等相关领域均有知识储备，具有较好的实践能力
+- 赵玉娇
+  - 擅长于统计学与数学，机器学习、计算机科学等相关领域均有知识储备，具有较好的思维能力
+  
+团队知识结构如下图所示：
+
+```{r ability, echo=FALSE}
+ability <- data.frame(collection=c(8,5,5),visualization=c(7,6,6),machine_learning=c(4,4,5),computer_science=c(6,7,6),statistic=c(6,5,7),math=c(4,6,6),row.names=c("曹霞","黄雅雯","赵玉娇"))
+barplot(as.matrix(ability),col=cm.colors(5),names.arg=c("资料搜集","数据可视化","机器学习","计算机科学","统计学","数学"),legend=rownames(ability),args.legend=c(x=8,y=22.1),cex.names = 0.7,xlab="团队技能")
+```
+
+## **协同方式**
+-  Github
+-  实时讨论、及时沟通
+
+# **数据来源**
+## **下载来源**
+　　数据下载来源为阿里云天池大数据竞赛新人赛，赛题为“快来一起挖掘幸福感！”下载地址：https://tianchi.aliyun.com/competition/entrance/231702/information (下载前需登陆报名)
+  
+## **原始出处**
+　　赛题所用数据的最初来源为中国人民大学中国调查与数据中心主持之《中国综合社会调查（CGSS）》项目2015年度的调查问卷，从中选取了多组变量，包括个体变量（性别、年龄、地域、职业、健康、婚姻与政治面貌等等）、家庭变量（父母、配偶、子女、家庭资本等等）、社会态度（公平、信用、公共服务等等）以及幸福感水平。  
+　　中国综合社会调查（Chinese General Social Survey，CGSS），是中国第一个全国性、综合性、连续性的大型社会调查项目。目的是通过定期、系统地收集中国人与中国社会各个方面的数据，总结社会变迁的长期趋势，探讨具有重大理论和现实意义的社会议题，推动国内社会科学研究的开放性与共享性，为政府决策与国际比较研究提供数据资料。
+  
+# **研究背景**
+## **历史背景**
+>　　国际上对幸福感的研究起始于二战后，从20世纪60年代逐步发展起来。Easterlin（1974，2010）最先研究了幸福与收入之间的关系，提出了“幸福悖论”，也称为“伊斯特林悖论”，即随着物质产品的丰富和收入水平的提升，人们并没有感觉更幸福，这类似一架“快乐水车”，尽管收入增长，但是幸福却没有同步增长。一个国家的主观幸福感随着经济发展上升到一定程度时，可能出现停滞或下降状态。随着时代的发展，“幸福悖论”也逐渐适用于中国。改革开放40年来，我国GDP持续高速增长，绝大多数居民的生活条件从根本上得到了改善，但是并无证据表明我国居民的幸福感呈现出与经济增长相匹配的提升。因此有必要对中国居民的幸福感进行研究。  
+    <p align="right">[*"户籍身份、社会分割与居民幸福感——基于不同影响机制的实证研究"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2019&filename=JJXJ201901012&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDM2MDZHNEg5ak1ybzlFWm9SOGVYMUx1eFlTN0RoMVQzcVRyV00xRnJDVVJMT2ZZdWRuRnlybFVyN0pMeWZUWkw=)</p>
+  
+## **政治背景**
+>　　党的十九大报告还特别强调了要把人民群众对美好生活的向往作为永远的奋斗目标，把人民的幸福快乐作为实现中国梦的重要标准，要让人们的幸福感、安全感、获得感更有保障、更充实、 更可持续。如何实现居民幸福感的提升，是各级政府进行社会治理工作需要关注的重要问题
+    <p align="right">[*"中国居民的生活方式与主观幸福感研究 ———基于 CGSS2015 数据的实证分析"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDPREP&filename=GHXY201901036&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDUwMDNMdXhZUzdEaDFUM3FUcldNMUZyQ1VSTE9mWXVkbkZ5cm1VcnZMSWlYVGQ3RzRIOWpNcm85R1lvUjhlWDE=)</p>
+  
+## **经济背景**
+>　　“幸福感数据”被广泛应用于分析微观经济现象和对非市场商品的价值评估中（如健康状况、气候和噪音代价等），同时幸福感可能是经济结果的决定因素：它提高了生产力，预示了未来收入，影响了劳动力市场的表现。越来越多的幸福感研究表明，性格特征在理解幸福感和经济结果间联系方面起着重要作用。同时，相当数量的实证研究表明，幸福感更高的个体通常在工作中有更佳的表现，且在求职过程中也更为顺利
+    <p align="right">[*"经济学家为什么研究幸福感？"*](https://mp.weixin.qq.com/s/8Uahhbi6AfRWz6w6WZxqIg)</p>
+  
+## **社会认知背景**
+>　　Akerlof 和Kranton将身份定义为一种社会类别的归属感，同时考虑到该类别中的人应如何行事。例如，一种社会分类是按性别分类，性别身份认同不仅会对男女教育程度差异、性别工资差异产生影响，也会对家庭中家务劳动和家庭权利的分配产生影响，从而影响处于婚姻中个体的生活幸福感。
+  <p align="right">[*"家庭内部相对收入、性别身份认同与中国居民生活幸福感——基于CGSS数据的实证研究"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2018&filename=JJPL201806010&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDc4ODV4WVM3RGgxVDNxVHJXTTFGckNVUkxPZll1ZG5GeXJtVWJ6Tkx5ZmJZckc0SDluTXFZOUVaSVI4ZVgxTHU=)</p>
+　　信仰和价值观对于主观幸福感的影响是不容忽视的，弗洛伊德认为，宗教信仰对个体的思想和行为具有引导功能，宗教文化在精神上的保护功能有利于使得人类感知到幸福。
+  <p align="right">[*"宗教信仰、社会支持与居民幸福感——基于CGSS2015数据的实证研究"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2018&filename=RELI201803017&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MjMyMTN5cm1Wci9KTnlqSFo3RzRIOW5Nckk5RVk0UjhlWDFMdXhZUzdEaDFUM3FUcldNMUZyQ1VSTE9mWXVkbkY=)</p>
+  
+## **现实背景**
+>　　据联合国发布的《世界幸福报告》显示,在156个受调查的国家中,2016-2018年中国的幸福感排名93，2010年起我国GDP总量已经超过日本, 成为仅次于美国的世界第二大经济体,但居民的幸福感排名却落后于大多数国家。
+
+```{r}
+image_path = "C:/Users/ZYJ/Desktop/happinessdata/dm/image_one.png"  
+rmarkdown::html_notebook_output_img(path = image_path, format = "png")
+```
+　　从2005-2008到2016-2018，中国的幸福感排名增加了0.426，这表明近年来随着政府对民生问题的关注以及相关政策的实施,我国国民幸福感在逐渐提升。但这一表现仍与我国经济增长速度并不匹配。因此, 有必要进一步研究影响国民幸福感的深层次原因。      
+
+```{r}
+image_path = "C:/Users/ZYJ/Desktop/happinessdata/dm/image_two.png"  
+rmarkdown::html_notebook_output_img(path = image_path, format = "png")
+```
+  　　
+　　该报告中幸福感排名是基于对调查中提出的主要生活评估问题的回答。它要求受访者将自己当前的生活评定为0到10级，其中最好的可能生活是10级，最坏的可能生活是0级，这也叫做Cantril阶梯（Cantril Ladder）。此外，报告中统计了另外两个衡量幸福感的指标（积极影响、消极影响）和六个反应居民生活水平的变量。从报告中我们可以发现，中国的Ladder排名为93，Ladder的标准差排名为72，积极影响排名为21，消极影响排名为11，社会支持排名为108，自由程度排名为31，慷慨程度为133，人均GDP排名为68，预期寿命排名为34。 
+  
+```{r}
+image_path = "C:/Users/ZYJ/Desktop/happinessdata/dm/image_three.png"  
+rmarkdown::html_notebook_output_img(path = image_path, format = "png")
+```
+  <p align="right">[*《世界幸福报告》*](https://s3.amazonaws.com/happiness-report/2019/WHR19.pdf)</p>
+
+# **数据预处理**
+
+## **数据观测**    
+
+1.  读入数据
+```{r}
+setwd("C:/Users/ZYJ/Desktop/happinessdata")
+library(tidyverse)
+data_original<-read.csv("happiness_train_abbr.csv")
+```
+ 
+2.  简单观测data的头和尾
+```{r}
+head(data_original)   #head()输出数据框的前5行
+tail(data_original)   #tail()输出数据框的后5行
+```
+3.  读入变量的含义    
+
+```{r}
+data_index<-read.csv("C:/Users/ZYJ/Desktop/happinessdata/happiness_index_1.csv")
+data_index
+```
+       
+4.  查看数据维度  
+
+```{r}
+dim(data_original)
+```
+
+
+##  **解析变量**       
+
+1.  观察data_original中变量的类型
+```{r}
+type<-vector("character",ncol(data_original))
+#将每列变量的类型存放到type里
+for (i in seq_along(data_original))
+{
+  type[i]<-class(data_original[[i]])
+}
+date_type<-data.frame(names=colnames(data_original),type=type)
+date_type
+#变量在使用前需要初始化
+#vector(mode="logical",length=0):构建一个指定类型和长度的向量
+#seq_along创建一个从1开始、长度为其输入值的序列
+#colnames():获取数据框的列名
+```
+
+2.  通过变量含义解析变量的类型
+    -  字符型:id  
+    -  日期型:survey_time;birth  
+    -  数值型:income,floor_area,height_cm,weight_jin,work_y,family_income,family_m,house,car  
+    -  因子型:其他
+
+3.   转化变量的类型
+```{r}
+#通过观察,将“不重复取值的个数”<35的变量转化为因子型变量
+data_1<-data_original
+for (i in seq_along(data_1))
+{
+  if(length(table(data_1[[i]]))<35)
+    data_1[[i]]<-factor(data_1[[i]])
+}
+#将id转化为字符型
+data_1$id<-as.character(data_1$id)
+#将survey_time转化为日期型
+data_1$survey_time<-as.Date(data_1$survey_time)
+#table():统计每个变量的取值频次
+```
+     
+4.  观察data_1中变量的类型
+```{r}
+type<-vector("character",ncol(data_1))
+for (i in seq_along(data_1))
+{
+  type[i]<-class(data_1[[i]])
+}
+date_1_type<-data.frame(names=colnames(data_1),type=type)
+date_1_type
+```
+  
+  
+  
+  发现city,country,family_m,house,car没有被正确解析  
+
+```{r}
+data_1$city<-factor(data_1$city)
+data_1$family_m<-as.integer(data_1$family_m)
+data_1$house<-as.integer(data_1$house)
+data_1$car<-as.integer(data_1$car)
+```
+
+
+5.  查看每个变量的取值情况
+```{r}
+#观察data_1中每个变量的频次分布,将其放入列表中
+#list:每个变量的长度数据类型和长度可以不一致
+i<-2
+mylist<-list()
+for (i in seq_along(data_1))
+{
+  mylist[[i]]<-table(data_1[[i]])
+}
+names(mylist)<-colnames(data_1)
+#mylist 因为数据太长,故不展示
+```
+   
+##  **数据处理**
+
+1.  删去记录       
+
+(1)happiness 
+    
+```{r}
+mylist[["happiness"]]
+```
+
+通过观察happiness的取值情况，我们发现有12个记录的happiness取值为-8(无法回答),故删去这12条记录   
+   
+```{r}
+data<-filter(data_1,happiness!=-8)
+#filter(data= ,var1= ,...):基于观测的值筛选出一个数据子集
+```
+     
+(2)city&county  
+    
+```{r}
+mylist[["city"]]
+mylist[["county"]]
+```
+通过观察,我们发现city与county中相同取值的观测个数太少,粒度太细,故删去city和county.选取province作为地域的区分
+
+```{r}
+data <- subset(data, select = -c(city,county))
+#subset():选取子集
+#select():选择列,-代表不选择该列
+```
+         
+2.  构造新的变量       
+
+(1)age  
+   通过survey_time和birth变量，我们可以求得被调查对象的年龄age.
+```{r}
+library(lubridate)
+survey_year<-year(data$survey_time)
+data$age<-survey_year-data$birth
+#删去survey_time和birth变量
+data <- subset(data, select = -c(survey_time,birth))
+#lubridate包处理时间数据
+```
+  
+(2)BMI  
+   通过height_cm和weight_jin变量，我们可以求得被调查对象的BMI(体质指数)
+```{r}
+data$BMI<-(data$weight_jin/2)/(data$height_cm/100)^2
+#删去height_cm和weight_jin变量
+data <- subset(data, select = -c(height_cm,weight_jin))
+```
+
+
+3.  统一取值  
+
+(1)income
+```{r}
+head(mylist[["income"]])
+```
+   
+   income中存在-1(不适用),-2(不知道),-3(拒绝回答)的取值,我们将这些取值统一为-8(无法回答)
+```{r}
+data<-data%>%mutate(income=ifelse(income<0,-8,income))
+# %>%:把左边的值发送给右边的表达式,并作为右边表达式函数的第一个参数.例:x%>%f(y)会变成f(x, y),x%>%f(y)%>%g(z)会变成g(f(x, y),z).
+# mutate():构造新的变量
+```
+  
+(2)work_status&work_yr&work_type&work_manage  
+  
+  将这些变量的NA值均修改为-8(无法回答)
+```{r}
+#将work_status中的NA值改为-8(无法回答)
+data<-data%>%mutate(work_status=ifelse(is.na(work_status),-8,work_status))
+#将work_yr中的NA值改为-8(无法回答)
+data<-data%>%mutate(work_yr=ifelse(is.na(work_yr)|work_yr<0,-8,work_yr))
+#work_type中的NA值改为-8(无法回答)
+data<-data%>%mutate(work_type=ifelse(is.na(work_type),-8,work_type))
+#work_manage中的NA值改为-8(无法回答)
+data<-data%>%mutate(work_manage=ifelse(is.na(work_manage),-8,work_manage))
+```
+  
+(3)family_income&family_m&house   
+   
+   将这些变量的NA值和-1,-2,-3更改为-8(无法回答)
+```{r}
+#将family_income中的NA值和-1,-2,-3更改为-8(无法回答)
+data<-data%>%mutate(family_income=ifelse(is.na(family_income)|family_income<0,-8,family_income))
+#将family_m中的NA值和-1,-2,-3更改为-8(无法回答)
+data<-data%>%mutate(family_m=ifelse(is.na(family_m)|family_m<0,-8,family_m))
+#将house中的NA值更改为-8(无法回答)
+data<-data%>%mutate(house=ifelse(house<0,-8,house))
+```
+   
+## **数据摘要**
+
+```{r}
+dim(data)
+```
+
+
+```{r}
+summary(data)
+```
+
+#  **探索性分析EDA**     
+
+```{r}
+ggplot(data,aes(x=happiness,fill=happiness))+geom_bar()+theme(aspect.ratio = 1)+coord_polar()
+```
+
+
+## **宗教信仰与幸福感**   
+
+**探索宗教信仰(religion)和参加宗教的频繁程度(religion_freq)与幸福感(happiness)的关联**  
+
+```{r}
+#根据religion与happiness绘制热度图
+p1<-data %>% count(religion,happiness) %>%ggplot(mapping=aes(religion,happiness))+geom_tile(mapping=aes(fill=n))+labs(title=("religion & happiness"))+theme(plot.title = element_text(hjust = 0.5)) 
+#用labs()添加标题
+#用theme()将标题居中
+```
+
+
+```{r}
+#根据religion_freq(参加宗教的频繁程度)和happiness绘制分组条形图
+p2<-ggplot(data,aes(x=happiness,fill=religion_freq))+geom_bar(stat="count",position = "dodge",width=0.5)+geom_text(stat="count", aes(label=..count..),position=position_dodge(width=0.5),size=1.5)+xlab("happiness")+ylab("count")+labs(title=("religion_freq & happiness"))+theme(plot.title = element_text(hjust = 0.5)) 
+#position="dodge":将每组中的条形图依次并列放置.
+```
+
+
+```{r fig.width=10,fig.height=3}
+#将两张图合并为一张
+library(ggpubr)
+ggarrange(p1,p2,ncol=2,labels=c("(1)","(2)"))
+```
+       
+-  通过图(1),我们可知有宗教信仰的人幸福感更高.通过图(2),我们可知每个等级的幸福感的人都基本不参加宗教活动,故幸福感与参加宗教活动的频繁程度没有太大关联.
+
+##  **生活方式与幸福感**   
+
+**探索以下生活方式社交的频率(socialize),休闲放松的频率(relax),学习充电的频率(learn)与幸福感(happiness)的关联**
+
+```{r}
+library(fmsb)
+#将happiness,socialize,relax,learn先转化成数值型变量,便于求平均值
+data_habbit<-data
+data_habbit$happiness<-as.integer(data_habbit$happiness)
+data_habbit$socialize<-as.integer(data_habbit$socialize)
+data_habbit$relax<-as.integer(data_habbit$relax)
+data_habbit$learn<-as.integer(data_habbit$learn)
+#分组统计happiness的均值
+AvY<-aggregate(data_habbit[,17:19],by=list(data_habbit[,2]),FUN=mean)
+#绘制雷达图
+radarchart(df=AvY[,2:4],pty=20,plty=8,plwd =2, cglty = 1,cglcol="grey",title = "lifestyle & happiness",vlcex=1,seg=3,maxmin=FALSE,vlabels=colnames(data_habbit[,17:19]),pcol=topo.colors(5),cglwd=0.5,axistype=0)+theme(plot.title = element_text(hjust = 0.5)) 
+legend("topright",legend=c("1","2","3","4","5"),col=topo.colors(5),lwd=0.5,inset=c(0.25,0),cex=0.35)
+```
+       
+-  通过三维雷达图我们可以看出,积极进行社交、休闲放松和学习充电的人幸福感更高,且参与程度越频繁,幸福感越高.   
+  
+## **家庭状况与幸福感**  
+
+**探索婚姻状况(marital)与幸福感(happiness)的关联**
+
+```{r}
+data_H<-data
+data_H$happiness<-as.integer(data_H$happiness)
+AvH<-aggregate(data_H[["happiness"]],by=list(data_H[,32]),FUN=mean)
+ggplot(AvH,aes(x=AvH[[1]],y=AvH[[2]]))+geom_point()+labs(title=("marital & happiness"))+theme(plot.title = element_text(hjust = 0.5))+xlab("marital")+ylab("avg_happiness") 
+```
+   
+
+-  从图中可以看出2(同居)和3(初婚有婚配)的人幸福感高,5(分居未离婚)和6(离婚)的人幸福感较低,可见婚姻状况对幸福感有着明显的影响.      
+
+
+**探索住房面积(floor_area)与幸福感(happiness)的关联**
+
+```{r}
+library(vioplot)
+H1<-data$floor_area[data$happiness=='1']
+H2<-data$floor_area[data$happiness=='2']
+H3<-data$floor_area[data$happiness=='3']
+H4<-data$floor_area[data$happiness=='4']
+H5<-data$floor_area[data$happiness=='5']
+vioplot(H1,H2,H3,H4,H5,col="gold")
+title("Floor_area & Happiness",xlab="happiness",ylab="floor_area")
+```
+     
+-   通过该图,我们看出住房面积与幸福感不太相关     
+
+## **健状况康与幸福感**  
+- 首先选取与幸福感相关的数据    
+
+```{r}
+healthdata <- data[c("happiness","age","BMI","health","health_problem","depression")]
+#读入与健康状况相关的数据列
+```  
+
+ **探索年龄(age)与幸福感(happiness)的关系**    
+
+```{r}
+
+age_happiness <-data.frame(age=numeric(0),happiness=numeric(0))
+# 构建新的数据框，用来存放年龄以及对应年龄样本的幸福感的平均值
+for(i in 18:94) #年龄的范围是18-94
+{
+  agenew <- i
+  happiness_meanbyage <- mean(as.numeric(as.character(healthdata$happiness[healthdata$age==i])))
+  newcol<-data.frame(age=agenew,happiness=happiness_meanbyage)
+  age_happiness <- rbind(age_happiness,newcol)
+}
+ggplot(data=age_happiness,mapping=aes(x=age,y=happiness))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
+# 画出年龄与对应幸福感均值的折线图，并画出平滑曲线
+
+```
+
+- 由上图可以看出，随着年龄的增长，幸福感呈先下降再上升的趋势  
+
+**探索年龄(age)与健康状况(health)的关系**
+
+```{r}
+
+age_health <-data.frame(age=numeric(0),health=numeric(0))
+#构建新的数据框，用来存放年龄以及对应年龄样本的健康状况的平均值
+for(i in 18:94)
+{
+  agenew <- i
+  health_meanbyage <- mean(as.numeric(as.character(healthdata$health[healthdata$age==i])))
+  newcol<-data.frame(age=agenew,health=health_meanbyage)
+  age_health <- rbind(age_health,newcol)
+}
+ggplot(data=age_health,mapping=aes(x=age,y=health))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
+# 画出年龄与对应样本健康状况平均值均值的折线图，并画出平滑曲线
+
+```
+
+- 由上图可以看出，随着年龄的增长，健康状况明显下降  
+
+**探索年龄(age)、健康(health)与幸福感(happiness)的关系**
+
+```{r}
+
+age_happiness_byhealth <- data.frame(age=numeric(0),health=numeric(0),happiness=numeric(0))
+# 构建新的数据框，用来存放不同年龄、不同健康状况样本对应幸福感的平均值
+for(i in 18:94)
+{
+  for(j in 1:5)
+  {
+      agenew <- i
+      healthnew <- j
+      happinessnew <- mean(as.numeric(as.character(healthdata$happiness[healthdata$age==i&healthdata$health==j])))
+      newcol<-data.frame(age=agenew,health=healthnew,happiness=happinessnew)
+      age_happiness_byhealth <- rbind(age_happiness_byhealth,newcol)
+  }
+}
+ggplot(age_happiness_byhealth,mapping=aes(x=age,y=happiness,colour=health))+geom_point()
+# 画出散点图，年龄为横坐标，幸福感为纵坐标，颜色的深浅代表不同的健康状况
+
+```
+
+- 上图表明，在任何年龄，都是健康状况越好，则幸福感越高  
+
+**探索身体质量指数(BMI)与幸福感(happpiness)的关系**
+
+```{r}
+
+ggplot(healthdata, aes(happiness, BMI))+  
+             geom_boxplot(aes(group = cut_width(happiness, 1)), outlier.alpha = 0.5)
+# 画出不同幸福感人群的BMI分布箱型图，查看是否有所不同          
+
+```
+
+- 上图表明，五种不同幸福感人群的BMI分布情况大致相同，说明BMI与幸福感水平可能并无显著关系
+
+## **工作状况与幸福感**  
+
+- 选取与工作相关的数据  
+
+```{r}
+
+workdata <- data[c("happiness","work_exper","work_status","work_yr","work_type","work_manage","income")]
+# 读入与工作状况和幸福感相关的数据列
+```
+
+**探索工作经历(work_exper)与幸福感(happiness)的关系**
+
+```{r}
+
+exper_happiness <-data.frame(work_exper=numeric(0),happiness=numeric(0))
+# 构建新的数据框，存放工作经历以及幸福感平均值
+name <- c("目前从事非农工作","目前务农，曾经有过非农工作","目前务农，没有过非农工作","目前没有工作，而且只务过农","目前没有工作，曾经有过非农工作","从未工作过")
+for(i in 1:6)
+{
+  work_expernew <- name[i]
+  happiness_meanbywork_exper <- mean(as.numeric(as.character(workdata$happiness[workdata$work_exper==i])))
+  newcol<-data.frame(work_exper=work_expernew,happiness=happiness_meanbywork_exper)
+  exper_happiness <- rbind(exper_happiness,newcol)
+}
+exper_happiness
+
+```
+
+- 上表表明，不同工作经历的人，幸福感平均值没有显著差异  
+
+**探索工作类型(work_status)与幸福感(happiness)的关系**
+
+```{r}
+
+status_happiness <-data.frame(work_status=numeric(0),happiness=numeric(0))
+# 构建新的数据框，存放工作类型以及幸福感平均值
+name <- c("自己是老板（或者是合伙人）","个体工商户","受雇于他人（有固定雇主）","劳务工/劳务派遣人员","零工、散工（无固定雇主的受雇者）","在自己家的生意/企业中工作/帮忙，领工资","在自己家的生意/企业中工作/帮忙，不领工资","自由职业者","其他")
+for(i in 1:9)
+{
+  work_statusnew <- name[i]
+  happiness_meanbywork_status <- mean(as.numeric(as.character(workdata$happiness[workdata$work_status==i])))
+  newcol<-data.frame(work_status=work_statusnew,happiness=happiness_meanbywork_status)
+  status_happiness <- rbind(status_happiness,newcol)
+}
+status_happiness
+
+```
+
+- 上表表明，不同工作状况的人，幸福感平均值没有显著差异    
+
+**探索管理情况(work_manage)与幸福感(happiness)的关系**
+
+```{r}
+
+manage_happiness <-data.frame(work_manage=numeric(0),happiness=numeric(0))
+# 构建新的数据框，存放不同管理活动状况以及幸福感平均值
+name <- c("只管理别人，不受别人管理","既管理别人，又受别人管理","只受别人管理，不管理别人","既不管理别人，又不受别人管理")
+for(i in 1:4)
+{
+  work_managenew <- name[i]
+  happiness_meanbywork_manage <- mean(as.numeric(as.character(workdata$happiness[workdata$work_manage==i])))
+  newcol<-data.frame(work_manage=work_managenew,happiness=happiness_meanbywork_manage)
+  manage_happiness <- rbind(manage_happiness,newcol)
+}
+manage_happiness
+
+```
+
+- 上表表明，从事不同管理活动的人，幸福感平均值没有显著差异   
+
+**探索工作年限(work_yr)与幸福感(happiness)的关系**  
+
+```{r}
+
+work_year_happiness <-data.frame(work_year=numeric(0),happiness=numeric(0))
+# 构建新的数据框，用来存放不同的工作年限以及其对应样本的幸福感的平均值
+for(i in 0:60)
+{
+  work_yearnew <- i
+  happiness_meanbywork_year <- mean(as.numeric(as.character(workdata$happiness[workdata$work_yr==i])))
+  newcol<-data.frame(work_year=work_yearnew,happiness=happiness_meanbywork_year)
+  work_year_happiness <- rbind(work_year_happiness,newcol)
+}
+ggplot(data=work_year_happiness,mapping=aes(x=work_year,y=happiness))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
+# 画出工作年限与对应样本幸福感平均值均值的折线图，并画出平滑曲线
+
+```
+
+- 由图看出，工作年限小于35年时，幸福感并无显著变化，工作年限大于35年后，幸福感呈缓慢上升趋势，这可能与年龄的增长对幸福感造成的影响有关    
+
+**探索工作收入(income)与幸福感(happiness)的关系**    
+
+```{r}
+
+ggplot(workdata, aes(happiness,income,colour=happiness))+coord_flip()+  
+             geom_boxplot(aes(group = cut_width(happiness, 1)), outlier.alpha = 0.5)+stat_summary(fun.y=mean, geom="point", shape=1, color="red",size=4)
+# 画出不同幸福感样本的收入的箱型图和均值
+
+```
+
+- 由于几个收入极其大的特殊点的存在，导致收入箱型图几乎压缩为一条直线，但是可以看出，这几个特殊点的幸福值处于中等以上水平    
+
+```{r}
+workdata$income[workdata$income>250000] <- NA
+# 将收入极大的异常点赋值为空
+ggplot(workdata, aes(happiness, income,colour=happiness))+coord_flip()+  
+             geom_boxplot(aes(group = cut_width(happiness, 1)), outlier.alpha = 0.5)+stat_summary(fun.y=mean, geom="point", shape=1, color="red",size=4)
+# 重新画不同幸福感样本的收入箱型图和均值
+```
+- 为更好的看出不同幸福感人群的收入差异，将上图中几个特殊值改为空，可以看出幸福感较高人群的总体收入情况要略高于幸福感偏低的人群
+
+## **地域因素与幸福感**
+
+**探索省份（province）与幸福感（happiness)的关系**
+
+```{r province,message=FALSE}
+
+#根据省份分组查看各省份幸福感均值
+happiness_meanp <- summarise(group_by(data,province),meanp=mean(as.numeric(happiness)))
+
+#添加一个省份名称NAME变量
+happiness_meanp$NAME <- NA
+
+#根据问卷含义给NAME赋值
+happiness_meanp <- within(happiness_meanp,{
+  NAME[province==1] <- "上海市"
+  NAME[province==2] <- "云南省"
+  NAME[province==3] <- "内蒙古自治区"
+  NAME[province==4] <- "北京市"
+  NAME[province==5] <- "吉林省"
+  NAME[province==6] <- "四川省"
+  NAME[province==7] <- "天津市"
+  NAME[province==8] <- "宁夏回族自治区"
+  NAME[province==9] <- "安徽省"
+  NAME[province==10] <- "山东省"
+  NAME[province==11] <- "山西省"
+  NAME[province==12] <- "广东省"
+  NAME[province==13] <- "广西壮族自治区"
+  NAME[province==14] <- "新疆维吾尔自治区"
+  NAME[province==15] <- "江苏省"
+  NAME[province==16] <- "江西省"
+  NAME[province==17] <- "河北省"
+  NAME[province==18] <- "河南省"
+  NAME[province==19] <- "浙江省"
+  NAME[province==20] <- "海南省"
+  NAME[province==21] <- "湖北省"
+  NAME[province==22] <- "湖南省"
+  NAME[province==23] <- "甘肃省"
+  NAME[province==24] <- "福建省"
+  NAME[province==25] <- "西藏自治区"
+  NAME[province==26] <- "贵州省"
+  NAME[province==27] <- "辽宁省"
+  NAME[province==28] <- "重庆市"
+  NAME[province==29] <- "陕西省"
+  NAME[province==30] <- "青海省"
+  NAME[province==31] <- "黑龙江省"
+}
+  )
+
+#查看各省份幸福感均值
+happiness_meanp[c(1,3,2)]
+```
+-  由表可知，广西壮族自治区的幸福感均值最低为3.623188，河北省幸福感均值最高为4.107143，但总体幸福感相差不大。
+
+## **教育因素与幸福感**
+
+**探索教育（edu）与幸福感（happiness)的关系**
+
+```{r edu,message=FALSE}
+#根据教育变量分组查看各教育程度幸福感均值
+happiness_meane <- summarise(group_by(data,edu),meane=mean(as.numeric(happiness)))
+
+happiness_meane
+
+#查看各教育程度的人数
+ggplot(data,aes(x=edu,fill=edu))+
+  geom_bar(stat="count")+
+  #theme(axis.text.x = element_text(angle = 90) )
+  coord_polar(theta = "y", start = 0, direction = 1, clip = "on")
+
+#查看各教育程度的均值
+ggplot(data = happiness_meane,mapping=aes(x=edu,y=meane))+
+  geom_bar(stat = "identity",fill="steelblue",alpha=2/3)+
+  coord_cartesian(ylim=c(3,5))
+
+```
+
+-  由图分析，幸福感均值最大致值出现在教育程度为13（研究生及以上）处，但除去-8（未回答），其余教育程度的幸福感均值都在3.5以上，相差不大。因此，教育程度对幸福感产生没有太大影响。
+
+```{r}
+#列表和分组画图查看各教育程度与各幸福等级的占比
+sjPlot::sjt.xtab(data$happiness,data$edu,show.col.prc = TRUE,show.row.prc = TRUE)
+sjPlot::sjp.xtab(data$happiness,data$edu,show.total = FALSE,show.prc = FALSE,show.n = FALSE)
+```
+
+## **社会认知与幸福感**
+
+**探索社会公平（equity）与幸福感（happiness)的关系**
+
+```{r equity,include=TRUE}
+
+#查看各社会公平认知水平下不同幸福感的人数分布
+
+data%>%
+  count(equity,happiness)%>%
+  ggplot(mapping = aes(equity,happiness))+
+  geom_tile(mapping = aes(fill=n))
+
+table1 <- sjPlot::sjt.xtab(data$happiness,data$equity,show.col.prc = TRUE,show.row.prc = TRUE) 
+
+```
+ -  非常不幸福的人中间认为社会完全不公平的占比最多为45.2%；非常幸福的人中间认为社会比较公平的占比最多为53.5%；从整体上看，认为社会比较公平且比较幸福的人占比最多。因此判断社会公平的建设有助于提高公民幸福感。
+
+**探索个人观点与社会观点的一致性（view）与幸福感（happiness)的关系**
+
+```{r view}
+#列表和分组画图查看观点一致性与各幸福等级的占比
+sjp.xtab(data$happiness,data$view,show.total = FALSE,show.prc = TRUE,show.n = FALSE)
+sjPlot::sjt.xtab(data$happiness,data$view,show.col.prc = TRUE,show.row.prc = TRUE)
+```
+-  分析可知，比较幸福（happiness=4）并且与社会大众认知基本保持一致（view>=3)的人数占主体。
+
+  
+  
