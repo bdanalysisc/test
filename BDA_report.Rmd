@@ -409,16 +409,17 @@ title("Floor_area & Happiness",xlab="happiness",ylab="floor_area")
 - 首先选取与幸福感相关的数据    
 
 ```{r}
-healthdata <- data[c("happiness","age","BMI","health","health_problem","depression")]
 #读入与健康状况相关的数据列
+healthdata <- data[c("happiness","age","BMI","health","health_problem","depression")]
+
 ```  
 
  **探索年龄(age)与幸福感(happiness)的关系**    
 
 ```{r}
 
-age_happiness <-data.frame(age=numeric(0),happiness=numeric(0))
 # 构建新的数据框，用来存放年龄以及对应年龄样本的幸福感的平均值
+age_happiness <-data.frame(age=numeric(0),happiness=numeric(0))
 for(i in 18:94) #年龄的范围是18-94
 {
   agenew <- i
@@ -426,8 +427,8 @@ for(i in 18:94) #年龄的范围是18-94
   newcol<-data.frame(age=agenew,happiness=happiness_meanbyage)
   age_happiness <- rbind(age_happiness,newcol)
 }
-ggplot(data=age_happiness,mapping=aes(x=age,y=happiness))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
 # 画出年龄与对应幸福感均值的折线图，并画出平滑曲线
+ggplot(data=age_happiness,mapping=aes(x=age,y=happiness))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
 
 ```
 
@@ -437,8 +438,9 @@ ggplot(data=age_happiness,mapping=aes(x=age,y=happiness))+geom_line()+stat_smoot
 
 ```{r}
 
-age_health <-data.frame(age=numeric(0),health=numeric(0))
 #构建新的数据框，用来存放年龄以及对应年龄样本的健康状况的平均值
+age_health <-data.frame(age=numeric(0),health=numeric(0))
+
 for(i in 18:94)
 {
   agenew <- i
@@ -446,8 +448,9 @@ for(i in 18:94)
   newcol<-data.frame(age=agenew,health=health_meanbyage)
   age_health <- rbind(age_health,newcol)
 }
-ggplot(data=age_health,mapping=aes(x=age,y=health))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
+
 # 画出年龄与对应样本健康状况平均值均值的折线图，并画出平滑曲线
+ggplot(data=age_health,mapping=aes(x=age,y=health))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
 
 ```
 
@@ -457,8 +460,9 @@ ggplot(data=age_health,mapping=aes(x=age,y=health))+geom_line()+stat_smooth(fill
 
 ```{r}
 
-age_happiness_byhealth <- data.frame(age=numeric(0),health=numeric(0),happiness=numeric(0))
 # 构建新的数据框，用来存放不同年龄、不同健康状况样本对应幸福感的平均值
+age_happiness_byhealth <- data.frame(age=numeric(0),health=numeric(0),happiness=numeric(0))
+
 for(i in 18:94)
 {
   for(j in 1:5)
@@ -470,8 +474,9 @@ for(i in 18:94)
       age_happiness_byhealth <- rbind(age_happiness_byhealth,newcol)
   }
 }
-ggplot(age_happiness_byhealth,mapping=aes(x=age,y=happiness,colour=health))+geom_point()
+
 # 画出散点图，年龄为横坐标，幸福感为纵坐标，颜色的深浅代表不同的健康状况
+ggplot(age_happiness_byhealth,mapping=aes(x=age,y=happiness,colour=health))+geom_point()
 
 ```
 
@@ -481,9 +486,9 @@ ggplot(age_happiness_byhealth,mapping=aes(x=age,y=happiness,colour=health))+geom
 
 ```{r}
 
+# 画出不同幸福感人群的BMI分布箱型图，查看是否有所不同   
 ggplot(healthdata, aes(happiness, BMI))+  
-             geom_boxplot(aes(group = cut_width(happiness, 1)), outlier.alpha = 0.5)
-# 画出不同幸福感人群的BMI分布箱型图，查看是否有所不同          
+             geom_boxplot(aes(group = cut_width(happiness, 1)), outlier.alpha = 0.5)   
 
 ```
 
@@ -495,16 +500,17 @@ ggplot(healthdata, aes(happiness, BMI))+
 
 ```{r}
 
-workdata <- data[c("happiness","work_exper","work_status","work_yr","work_type","work_manage","income")]
 # 读入与工作状况和幸福感相关的数据列
+workdata <- data[c("happiness","work_exper","work_status","work_yr","work_type","work_manage","income")]
+
 ```
 
 **探索工作经历(work_exper)与幸福感(happiness)的关系**
 
 ```{r}
 
-exper_happiness <-data.frame(work_exper=numeric(0),happiness=numeric(0))
 # 构建新的数据框，存放工作经历以及幸福感平均值
+exper_happiness <-data.frame(work_exper=numeric(0),happiness=numeric(0))
 name <- c("目前从事非农工作","目前务农，曾经有过非农工作","目前务农，没有过非农工作","目前没有工作，而且只务过农","目前没有工作，曾经有过非农工作","从未工作过")
 for(i in 1:6)
 {
@@ -523,8 +529,8 @@ exper_happiness
 
 ```{r}
 
-status_happiness <-data.frame(work_status=numeric(0),happiness=numeric(0))
 # 构建新的数据框，存放工作类型以及幸福感平均值
+status_happiness <-data.frame(work_status=numeric(0),happiness=numeric(0))
 name <- c("自己是老板（或者是合伙人）","个体工商户","受雇于他人（有固定雇主）","劳务工/劳务派遣人员","零工、散工（无固定雇主的受雇者）","在自己家的生意/企业中工作/帮忙，领工资","在自己家的生意/企业中工作/帮忙，不领工资","自由职业者","其他")
 for(i in 1:9)
 {
@@ -543,8 +549,8 @@ status_happiness
 
 ```{r}
 
-manage_happiness <-data.frame(work_manage=numeric(0),happiness=numeric(0))
 # 构建新的数据框，存放不同管理活动状况以及幸福感平均值
+manage_happiness <-data.frame(work_manage=numeric(0),happiness=numeric(0))
 name <- c("只管理别人，不受别人管理","既管理别人，又受别人管理","只受别人管理，不管理别人","既不管理别人，又不受别人管理")
 for(i in 1:4)
 {
@@ -563,8 +569,8 @@ manage_happiness
 
 ```{r}
 
-work_year_happiness <-data.frame(work_year=numeric(0),happiness=numeric(0))
 # 构建新的数据框，用来存放不同的工作年限以及其对应样本的幸福感的平均值
+work_year_happiness <-data.frame(work_year=numeric(0),happiness=numeric(0))
 for(i in 0:60)
 {
   work_yearnew <- i
@@ -572,8 +578,8 @@ for(i in 0:60)
   newcol<-data.frame(work_year=work_yearnew,happiness=happiness_meanbywork_year)
   work_year_happiness <- rbind(work_year_happiness,newcol)
 }
-ggplot(data=work_year_happiness,mapping=aes(x=work_year,y=happiness))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
 # 画出工作年限与对应样本幸福感平均值均值的折线图，并画出平滑曲线
+ggplot(data=work_year_happiness,mapping=aes(x=work_year,y=happiness))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
 
 ```
 
@@ -583,20 +589,23 @@ ggplot(data=work_year_happiness,mapping=aes(x=work_year,y=happiness))+geom_line(
 
 ```{r}
 
+# 画出不同幸福感样本的收入的箱型图和均值
 ggplot(workdata, aes(happiness,income,colour=happiness))+coord_flip()+  
              geom_boxplot(aes(group = cut_width(happiness, 1)), outlier.alpha = 0.5)+stat_summary(fun.y=mean, geom="point", shape=1, color="red",size=4)
-# 画出不同幸福感样本的收入的箱型图和均值
 
 ```
 
 - 由于几个收入极其大的特殊点的存在，导致收入箱型图几乎压缩为一条直线，但是可以看出，这几个特殊点的幸福值处于中等以上水平    
 
 ```{r}
-workdata$income[workdata$income>250000] <- NA
+
 # 将收入极大的异常点赋值为空
+workdata$income[workdata$income>250000] <- NA
+
+# 重新画不同幸福感样本的收入箱型图和均值
 ggplot(workdata, aes(happiness, income,colour=happiness))+coord_flip()+  
              geom_boxplot(aes(group = cut_width(happiness, 1)), outlier.alpha = 0.5)+stat_summary(fun.y=mean, geom="point", shape=1, color="red",size=4)
-# 重新画不同幸福感样本的收入箱型图和均值
+
 ```
 - 为更好的看出不同幸福感人群的收入差异，将上图中几个特殊值改为空，可以看出幸福感较高人群的总体收入情况要略高于幸福感偏低的人群
 
