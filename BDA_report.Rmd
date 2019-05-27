@@ -26,8 +26,6 @@ STUDENT_NAME <- c("曹霞","黄雅雯","赵玉娇")
 STUDENT_NUMBER <- c("201643030","201638058","201629019")
 WORK <- c("1. 搜集有关“幸福感”的背景资料，包含幸福悖论、宗教、性别认同、住房等相关方面的背景  2. 主笔报告团队概况部分  3. 整理GitHub相关学习资料并撰写Github工作报告  4. 可视化分析教育、地域、社会认知等方面变量与主观幸福感的关系  5. 建模分析(有序因变量回归分析、神经网络分析）","1. 搜集有关“幸福感”的背景资料，包含政策、世界幸福感排名等相关资料  2. 主笔数据预处理部分  3. 可视化宗教信仰、生活方式、家庭状况等方面变量与主观幸福感的关系  4. 建模分析(多元线性回归及主成分分析、二分变量回归分析)","1. 搜集有关“幸福感”的背景资料，包含政治、经济等方面的背景 2. 主笔数据来源以及问题背景部分  3. 可视化身心健康、工作就业等变量与主观幸福感的关系  4. 建模分析(泊松回归分析、决策树建模分析)")
 
-#表格生成器，生成一个完整的成员简介表
-#kable(x, format, digits = getOption("digits"), row.names = NA, col.names = NA, align, caption = NULL, label = NULL, format.args = list(), escape = TRUE, ...)
 teamtable <- knitr::kable(
   data.frame(STUDENT_NAME,STUDENT_NUMBER,WORK),
   caption = "WORK DISTRIBUTION",
@@ -761,10 +759,165 @@ ggarrange(pic1,pic2,nrow=2,labels=c("(1)","(2)"))
 -  如图(1)所示，比较幸福(happiness=4)并且与社会大众观点一致的时候比较多(view=4)的人数占比最多。不幸福(happiness<=2)的群体中，与社会观点基本不一致(view<=3)的人占主导，幸福(happiness>=4)的群体中，与社会观点基本一致(view>=4)的人占主导。  
 -  如图(2)所示，与社会观点基本不一致（view<=3）的群体中，感觉不幸福的人数占比会大于幸福的人数，与社会观点基本一致（view>=4）的群体中觉得幸福的人数占比会超过不幸福的人数。
 
+# 建立模型    
+      
+## 多元线性回归模型   
 
-# **有序因变量回归**
+- 流程：    
+    -  利用主成分分析法进行数据降维    
+    -  利用提取的主成分进行多元线性回归模型的建立  
+    -  回归模型的检验    
 
-## **模型构建和分析**
+###  数据降维:主成分分析法PCA   
+
+
+1. 数据标准化  
+
+```{r}
+library(tidyverse)
+data_original<-read.csv("happiness_train_clean.csv")
+#取出data中后几列，并将数据标准化,统一量纲
+data_new<-scale(data_original[,c(3:38)])
+```
+
+2. 判断主成分个数
+
+```{r}
+library(psych)
+fa.parallel(data_new,n.iter = 100)
+#n.iter 随机取n个数据矩阵推导出特征值均值(虚线),以及y=1的水平线
+#选取特征根大于1的作为主成分
+```
+
+- 根据结果提取11个主成分
+
+3. 提取主成分
+```{r} 
+pc<-principal(data_new,nfactors = 11,rotate = "none")
+pc
+#PC1为成分载荷(指观测变量与主成分的相关系数),若提取的主成分大于1,则会出现PC2、PC3等,成分载荷可以解释主成分与各变量的相关程度.  
+#h2栏为成分公因子方差,即主成分对每个变量的方差解释  
+#u2栏为成分唯一性,即方差无法被主成分解释的部分(1-h2) #SS loadings:公共因子对变量X的总方差贡献  
+#Proportion Var:方差贡献率  
+#Cumulative Var:累积方差贡献率  
+#Proportion Explained:按现有总解释方差百分比划分主成分  
+#Cumulative Proportion:累积百分比
+```
+
+   
+4. 主成分旋转  
+
+- 旋转是一系列将成分载荷阵变得更容易解释的数学方法,其中正交旋转是方差极大旋转,它试图对载荷阵的列进行去 噪,使得每个成分只是由一组有限的变量来解释(即载荷阵每列只有少数几个很大的载荷，其他 都是很小的载荷)。  
+
+```{r}
+rc<-principal(data_new,nfactors = 11,rotate = "varimax")
+rc
+```
+
+- 根据因子载荷矩阵,我们可以得到如下结论:    
+    1). PC1在work_exper,work_status,work_yr,work_type,work_manage这五个变量上的载荷较大,可以解释为"工作"变量,解释了happiness变量13%的方差.    
+    2). PC2在equity,class,family_status和view这四个变量上的载荷较大,可以解释为"社会认知"变量,解释了happiness变量4%的方差.    
+    3). PC3在survey_type和hukou这两个变量上的载荷较大,可以解释为"地域"变量,解释了happiness变量6%的方差.  
+    4). PC4在marital和age这两个变量上的载荷较大,可以解释为"婚姻"变量,解释了happiness变量6%的方差.    
+    5). PC5在status_peer和status_3_before这两个变量上的载荷较大,可以解释为"社会地位"变量,解释了happiness变量4%的方差.  
+    6). PC6在health,health_problem和depression这两个变量上的载荷较大,可以解释为"健康"变量,解释了happiness变量5%的方差.  
+    7). PC7在nationality,religion和religion_freq这3个变量上的载荷较大,可以解释为"信仰"变量,解释了happiness变量3%的方差.   
+    8). PC8在socialize和relax这两个变量上的载荷较大,可以解释为"休闲"变量,解释了happiness变量4%的方差.   
+    9). PC9在gender这个变量上的载荷较大,可以解释为"性别"变量,解释了happiness变量4%的方差.  
+    10). PC10在floor_area,family_m和car这三个变量上的载荷较大,可以解释为"体重指数"变量,解释了happiness变量4%的方差.   
+    11). PC11在income和family_income这两个变量上的载荷较大,可以解释为"收入"变量,解释了happiness变量3%的方差.       
+    综上,11个主成分旋转后的累积方差解释性为57%
+
+5. 获取主成分得分
+
+```{r}
+library(psych)
+unclass(rc$weights)
+```
+
+
+
+## 多元线性回归  
+
+1. 将原始数据转化为11个因子
+```{r}
+score<-rc$weights #得分计算矩阵
+ef<-data_new%*%score #将原数据转化11个因子
+mydata<-cbind(ef,data_original$happiness)
+```
+
+2. 拟合多元线性回归模型  
+
+```{r}
+mydata_frame<-as.data.frame(mydata) #回顾需要数据框，先将数据从矩阵转化为数据框
+fit <- lm(V12 ~ RC1+RC2+RC3+RC4+RC5+RC6+RC7+RC8+RC9+RC10+RC11,data=mydata_frame)
+summary(fit)
+```
+
+- 其中RC7和RC9的p值大于0.05,说明RC7与RC9对happiness无显著性影响.  
+
+3. 剔除变量,重新拟合回归模型  
+
+```{r}
+newfit <- lm(V12 ~ RC1+RC2+RC3+RC4+RC5+RC6+RC8+RC10+RC11,data=mydata_frame)
+summary(newfit)
+```
+
+## 回归诊断   
+
+- 为了能够恰当地解释OLS模型的系数，数据必须满足以下统计假设：  
+    1).  正态性:对于固定的自变量值,因变量值成正态分.
+    2).  独立性:Yi值之间相互独立.  
+    3).  线性:因变量与自变量之间为线性相关.  
+    4).  同方差性:因变量的方差不随自变量的水平不同而变化. 
+    
+
+1. 正态性  
+
+```{r}
+library(car)
+qqPlot(newfit,labels=row.names(mydata_frame),id.method="identify",simulate=T,main="Q-Q Plot")
+```
+
+- Q-Q图主要用来检验样本是否近似服从正态分布.对于标准状态分布而言,Q-Q图上的点近似在Y=X直线附近,该直线的斜率为标准差,截距为均值. 由图可知,我们拟合的曲线不符合正态分布.   
+
+2. 误差的独立性
+```{r}
+#Durbin—Watson检验:检测误差的序列相关性
+durbinWatsonTest(newfit)
+```
+  
+- p=0.802>0.05,说明P值不显著,变量间有自相关性,误差项之间不独立.其中,滞后项(lag=1)表明数据集中每个数据都是与其后一个数据进行比较的.  
+
+3. 同方差性     
+
+- 异方差:某一因素或某些因素随着解释变量观测值的变化而对被解释变量产生不同的影响,导致随机误差产生不同方差.      
+- 残差图分析法是一种直观、方便的分析方法.它以残差为纵坐标,以样本拟合值为横坐标画散点图,主要用来检验是否存在异方差.    
+
+```{r}
+ncvTest(newfit)
+#p值不显著 满足方差不变假设
+spreadLevelPlot(newfit)
+```
+   
+- 由图可知,残差图上的点的散布呈现出一定趋势（随横坐标的增大而增大或减小）,则可以判断回归模型存在异方差.
+     
+     
+4. 线性模型假设的综合验证
+```{r}
+library(gvlma)
+gvmodel<-gvlma(newfit)
+summary(gvmodel)
+```
+
+- 不满足Global Stat,SkewneSs(偏斜度)、Kurtosis(峰度的假设);满足Link Function(链结函数)和Heterosecdasticity(异方差性)的假设.
+
+
+
+
+## **有序因变量回归**
+
+### **模型构建和分析**
 
 **对于有次序的分类变量或者离散变量可以采用有序因变量回归。 该模型可以提供高低不同层次之间的两两比较和累积概率**   
 **一般而言，回归系数β>0表明随解释变量正向变化，选择将、较高等级的可能性增加，选择较低等级的可能性下降；若回归系数β<0,反之。**
@@ -866,7 +1019,7 @@ summary(fm3)
 
 -  由逐步回归结果可得happiness ~ survey_type + gender + edu1 + income1 + health + equity + view + inc_ability，去掉了不显著的交互项inc_ability:income1。
 
-## **模型结果可视化**
+### **模型结果可视化**
 ```{r visualize}
 library(ggeffects)
 
@@ -895,7 +1048,7 @@ plot(dat3,facet = TRUE)+
 -  由图分析，工资水平越高，其选择的高等级幸福感的概率会越大。
 
 
-# **神经网络建模分析**
+## **神经网络建模分析**
     
 ```{r balance data}
 library(ROSE)
