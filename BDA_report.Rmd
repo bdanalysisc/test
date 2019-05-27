@@ -913,6 +913,119 @@ summary(gvmodel)
 - 不满足Global Stat,SkewneSs(偏斜度)、Kurtosis(峰度的假设);满足Link Function(链结函数)和Heterosecdasticity(异方差性)的假设.
 
 
+## 广义线性模型扩展：泊松回归  
+
+- 当通过一系列连续型和/或类别型预测变量来预测计数型因变量时，泊松回归是常用的工具   
+
+```{r}
+#根据前面探索性分析的结果，我们选取宗教、婚姻、健康、年龄、收入、社会认知6个自变量进行回归
+glm_data <- data[c("happiness","religion","marital","health","age","income","equity","inc_ability")]
+
+#为进行回归分析，需将因子型变量值为-8的行删去
+glm_data <- glm_data%>%filter(religion != -8,marital != -8,health != -8,age != -8,income != -8,equity != -8,inc_ability != -8)
+
+#为接下来图标更加值观，将因子型变量的类别编号改为其实际含义
+glm_data$religion <- as.character(glm_data$religion)
+glm_data$marital <- as.character(glm_data$marital)
+glm_data$health <- as.character(glm_data$health)
+glm_data$equity <- as.character(glm_data$equity)
+glm_data$inc_ability <- as.character(glm_data$inc_ability)
+glm_data$religion[as.numeric(glm_data$religion)==0] <- "0 无宗教" 
+glm_data$religion[as.numeric(glm_data$religion)==1] <- "1 有宗教"
+glm_data$marital[as.numeric(glm_data$marital)==1] <- "1 未婚"
+glm_data$marital[as.numeric(glm_data$marital)==2] <- "2 同居"
+glm_data$marital[as.numeric(glm_data$marital)==3] <- "3 初婚有配偶"
+glm_data$marital[as.numeric(glm_data$marital)==4] <- "4 再婚有配偶"
+glm_data$marital[as.numeric(glm_data$marital)==5] <- "5 分居未离婚"
+glm_data$marital[as.numeric(glm_data$marital)==6] <- "6 离婚"
+glm_data$marital[as.numeric(glm_data$marital)==7] <- "7 丧偶"
+glm_data$health[as.numeric(glm_data$health)==1] <- "1 很不健康"
+glm_data$health[as.numeric(glm_data$health)==2] <- "2 比较不健康"
+glm_data$health[as.numeric(glm_data$health)==3] <- "3 一般"
+glm_data$health[as.numeric(glm_data$health)==4] <- "4 比较健康"
+glm_data$health[as.numeric(glm_data$health)==5] <- "5 很健康"
+glm_data$equity[as.numeric(glm_data$equity)==1] <- "1 完全不公平"
+glm_data$equity[as.numeric(glm_data$equity)==2] <- "2 比较不公平"
+glm_data$equity[as.numeric(glm_data$equity)==3] <- "3 说不上公平不公平"
+glm_data$equity[as.numeric(glm_data$equity)==4] <- "4 比较公平"
+glm_data$equity[as.numeric(glm_data$equity)==5] <- "5 完全公平"
+glm_data$inc_ability[as.numeric(glm_data$inc_ability)==1] <- "1 非常合理"
+glm_data$inc_ability[as.numeric(glm_data$inc_ability)==2] <- "2 合理"
+glm_data$inc_ability[as.numeric(glm_data$inc_ability)==3] <- "3 非常合理"
+glm_data$inc_ability[as.numeric(glm_data$inc_ability)==4] <- "4 非常不合理"
+glm_data$religion <- factor(glm_data$religion)
+glm_data$marital <- factor(glm_data$marital)
+glm_data$health <- factor(glm_data$health)
+glm_data$equity <- factor(glm_data$equity)
+glm_data$inc_ability <- factor(glm_data$inc_ability)
+
+#为方便实用该模型，将幸福感变为数值型，将收入取对数
+glm_data$income <- log(glm_data$income+1)
+glm_data$happiness <- as.numeric(as.character(glm_data$happiness))
+
+#加载需要的包
+library(stargazer)
+library(sjPlot)
+library(ggeffects)
+
+#查看整理好用于泊松回归的数据集
+glm_data
+```
+
+**不考虑变量间交互影响，生成模型**  
+
+```{r}
+#不考虑变量间交互，生成模型1
+model1 <- glm(happiness~religion+marital+health+age+income+equity+inc_ability,data=glm_data,family = poisson())
+summary(model1)
+```
+
+- 由模型可以看出，健康状况、社会公平、收入合理性对幸福感有显著影响  
+- 对比参照组（很不健康），个体越健康，处于较高幸福感的可能性就越大  
+- 对比参照组（认为社会非常不公平），个体越认为社会公平，处于较高幸福感的可能性越大  
+- 对比参照组（认为收入非常合理），个体认为收入越不合理，处于较高幸福感的可能性越小  
+
+**考虑变量间可能存在的交互影响，重新生成模型**    
+
+```{r}
+#交互影响：即当影响行为的一个因子与另一个因子共同起作用时，它们对该行为产生与各自单独作用时截然不同的影响。例如：A对C有作用，B对C有作用，当A与B联合（A*B）时，对C产生协同或拮抗作用，这种作用称为交互作用。如果A与B对C不产生这作用，则不存在交互作用
+model2 <- glm(happiness~religion+marital+health+age+income+equity+inc_ability+age*health+age*income+health*income,data=glm_data,family = poisson())
+summary(model2)
+```
+
+- 由上述结果可以看出，健康状况、社会公平、收入合理性对幸福感依然有显著影响，交互作用对模型的影响不显著  
+
+**模型可视化**      
+
+```{r}
+#用图形直观查看健康对幸福感的影响
+dat1 <-ggpredict(model2,terms=list("health"))
+plot(dat1,facet=TRUE)+geom_line()
+```
+
+- 由图可看出，健康对幸福感有显著正面影响    
+
+```{r}
+#用图形直观查看收入和健康对幸福感的交互影响
+dat2 <- ggpredict(model2,terms = list("income","health"))
+P1 <- plot(dat2,facet=TRUE)+geom_line()
+#用图形直观查看年龄和健康对幸福感的交互影响
+dat3 <- ggpredict(model2,terms = list("age","health"))
+P2 <- plot(dat3,facet=TRUE)+geom_line()
+#将两张图并列放置
+library(ggpubr)
+ggarrange(P1,P2,ncol=2,labels=c("(1)","(2)"))
+```
+
+- 由图可以看出，在控制了其他变量的基础上，收入、年龄对幸福感的影响总体来说并不十分显著（只有当健康状况为很不健康时，幸福感变化较大）    
+
+**逐步回归**  
+```{r}
+model3 <- step(model2)
+summary(model3)
+```
+
+- 逐步回归由系统自动挑选最佳的回归方程，我们可以看到系统自动去掉了不显著的交互项，级该交互效应在我们所研究的问题上没有统计学上的意义。    
 
 
 ## **有序因变量回归**
@@ -1046,6 +1159,70 @@ plot(dat3,facet = TRUE)+
 ```
 
 -  由图分析，工资水平越高，其选择的高等级幸福感的概率会越大。
+
+
+
+## 决策树  
+
+```{r}
+library(ROSE)
+# 在决策树中，我们采用和泊松回归同样的变量，将泊松回归整理过的数据集读入
+tree_data <- glm_data
+#将幸福感重新转换为因子型
+tree_data$happiness <- factor(tree_data$happiness)
+#由于模型需要，将幸福感分为“happy”和“unhappy”分成两类
+tree_data$happiness <- as.character(tree_data$happiness)
+tree_data$happiness[tree_data$happiness==1|tree_data$happiness==2|tree_data$happiness==3] <- "unhappy"
+tree_data$happiness[tree_data$happiness==4|tree_data$happiness==5] <- "happy"
+tree_data$happiness <- factor(tree_data$happiness)
+summary(tree_data$happiness)
+```
+- 我们看到，幸福与不幸福的数据量差距较大，数据可能存在不平衡   
+
+**平衡数据**
+
+```{r}
+#平衡数据
+rose_train <- ROSE(happiness~religion+marital+health+age+income+equity+inc_ability,data=tree_data)
+#将平衡后数据的类型从ROSE型变成数据框
+rose_train <- data.frame(rose_train$data)
+summary(rose_train$happiness)
+```
+- 可以看出平衡过后的数据基本达到平衡  
+
+**生成决策树**   
+
+```{r}
+library(caret)
+library(rpart)
+library(rattle)
+#利用原使不平衡的数据生成决策树
+rpart1 <- train(happiness~religion+marital+health+age+income+equity+inc_ability,data=tree_data,"rpart")
+#利用平衡后的数据生成决策树
+rpart2 <- train(happiness~religion+marital+health+age+income+equity+inc_ability,data=rose_train,"rpart")
+#混淆矩阵
+confusionMatrix(rpart1)
+confusionMatrix(rpart2)
+```
+- 可以看出，对于未平衡的数据，正确率未79.18%，对于平衡后的数据集，正确率为66.98%    
+- 这主要是由于在非平衡数据中，模型倾向于将绝大部分（共有75.1% + 17.3% = 92.4%）的数据预测为幸福,而在平衡数据中，尽管正确率降低，但还是高于随机猜测的    
+
+## 输入决策模型并可视化  
+
+```{r}
+library(rpart.plot)
+print(rpart1$finalModel)
+rpart.plot(rpart1$finalModel,extra=0,tweak=1,type=1)
+```
+  
+- 对于非平衡数据生成的决策树较为复杂  
+
+```{r}
+print(rpart2$finalModel)
+rpart.plot(rpart2$finalModel,extra=0,tweak=1,type=1)
+```
+  
+- 可以看出，这是一颗叶节点为3的决策树，这个简单的决策树预测模型的结论是，公平和健康是预测幸福感的重要因素
 
 
 ## **神经网络建模分析**
