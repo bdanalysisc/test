@@ -767,7 +767,9 @@ ggarrange(pic1,pic2,nrow=2,labels=c("(1)","(2)"))
 -  如图(1)所示，比较幸福(happiness=4)并且与社会大众观点一致的时候比较多(view=4)的人数占比最多。不幸福(happiness<=2)的群体中，与社会观点基本不一致(view<=3)的人占主导，幸福(happiness>=4)的群体中，与社会观点基本一致(view>=4)的人占主导。  
 -  如图(2)所示，与社会观点基本不一致（view<=3）的群体中，感觉不幸福的人数占比会大于幸福的人数，与社会观点基本一致（view>=4）的群体中觉得幸福的人数占比会超过不幸福的人数。
 
-# **建立模型**    
+# **建立模型** 
+
+-  **此部分主要参考谢颖.《R语言与社会科学调查数据分析》**
       
 ## **多元线性回归模型**   
 
@@ -838,14 +840,14 @@ rc
 
 5. 获取主成分得分
 
-```{r}
+```{r results="hide"}
 library(psych)
 unclass(rc$weights)
 ```
 
 
 
-## **多元线性回归**  
+### **多元线性回归**  
 
 1. 将原始数据转化为11个因子
 ```{r}
@@ -871,7 +873,7 @@ newfit <- lm(V12 ~ RC1+RC2+RC3+RC4+RC5+RC6+RC8+RC10+RC11,data=mydata_frame)
 summary(newfit)
 ```
 
-## **回归诊断**   
+### **回归诊断**   
 
 - 为了能够恰当地解释OLS模型的系数，数据必须满足以下统计假设：  
     1).  正态性:对于固定的自变量值,因变量值成正态分.
@@ -1217,7 +1219,7 @@ confusionMatrix(rpart2)
 - 可以看出，对于未平衡的数据，正确率约为79%，对于平衡后的数据集，正确率约为67%    
 - 这主要是由于在非平衡数据中，模型倾向于将绝大部分的数据预测为幸福,而在平衡数据中，尽管正确率降低，但还是高于随机猜测的    
 
-## **输入决策模型并可视化**  
+**输入决策模型并可视化**  
 
 ```{r}
 library(rpart.plot)
@@ -1261,7 +1263,7 @@ plot_frq(rose_train$data$newhappy)
 ```{r BP,results="hide"}
 nnet <- train(newhappy~survey_type+gender+edu1+income1+health+equity+view+inc_ability,data=rose_train$data,"nnet")
 ```
-
+迭代过程太长，故不予显示。
 ```{r}
 confusionMatrix(nnet)
 ```
@@ -1281,7 +1283,7 @@ garson(nnet)+
   theme(axis.text.x = element_text(angle = 50,hjust = 1))
 ```
 
--  由上图可以清晰地看出对神经网络预测过程中变量重要性的排序。
+-  由上图可以清晰地看出神经网络预测过程中各变量重要性的排序。
 
 # **GitHub工作总结**
 
