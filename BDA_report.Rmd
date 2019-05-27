@@ -3,14 +3,14 @@ title: "BDA_report"
 author: "曹霞 黄雅雯 赵玉娇"
 date: "2019/5/18"
 output:
-  html_document:
-    df_print: paged
-    toc: yes
-  github_document: default
   html_notebook:
     highlight: monochrome
     number_sections: yes
     theme: united
+    toc: yes
+  github_document: default
+  html_document:
+    df_print: paged
     toc: yes
 ---
 
@@ -18,20 +18,22 @@ output:
 
 ## **团队分工**
 
-```{r setup, message=FALSE,echo=FALSE,warning=FALSE}
+```{r setup,echo=FALSE}
 knitr::opts_chunk$set(warning = FALSE,message = FALSE)
 library(tidyverse)
 library(sjPlot)
-NAME <- c("曹霞","黄雅雯","赵玉娇")
+STUDENT_NAME <- c("曹霞","黄雅雯","赵玉娇")
 STUDENT_NUMBER <- c("201643030","201638058","201629019")
-WORK <- c("1. 搜集有关“幸福感”的背景资料，包含幸福悖论、宗教、性别认同、住房等相关方面的背景  2. 主笔报告团队概况部分  3. 整理GitHub相关学习资料  4. 可视化分析教育、地域、社会认知等方面变量与主观幸福感的关系  5. 建模分析","1. 搜集有关“幸福感”的背景资料，包含政策、世界幸福感排名等相关资料  2. 主笔数据预处理部分  3. 可视化宗教信仰、生活方式、家庭状况等方面变量与主观幸福感的关系  4. 建模分析","1. 搜集有关“幸福感”的背景资料，包含政治、经济等方面的背景 2. 主笔数据来源以及问题背景部分  3. 可视化身心健康、工作就业等变量与主观幸福感的关系  4. 建模分析")
-knitr::kable(
-  data.frame(NAME,STUDENT_NUMBER,WORK),
-  caption = "WORK DISTRIBUTION",
-  align = c("c","l","l")
-) 
+WORK <- c("1. 搜集有关“幸福感”的背景资料，包含幸福悖论、宗教、性别认同、住房等相关方面的背景  2. 主笔报告团队概况部分  3. 整理GitHub相关学习资料并撰写Github工作报告  4. 可视化分析教育、地域、社会认知等方面变量与主观幸福感的关系  5. 建模分析(有序因变量回归分析、神经网络分析）","1. 搜集有关“幸福感”的背景资料，包含政策、世界幸福感排名等相关资料  2. 主笔数据预处理部分  3. 可视化宗教信仰、生活方式、家庭状况等方面变量与主观幸福感的关系  4. 建模分析(多元线性回归及主成分分析、二分变量回归分析)","1. 搜集有关“幸福感”的背景资料，包含政治、经济等方面的背景 2. 主笔数据来源以及问题背景部分  3. 可视化身心健康、工作就业等变量与主观幸福感的关系  4. 建模分析(泊松回归分析、决策树建模分析)")
+
 #表格生成器，生成一个完整的成员简介表
 #kable(x, format, digits = getOption("digits"), row.names = NA, col.names = NA, align, caption = NULL, label = NULL, format.args = list(), escape = TRUE, ...)
+teamtable <- knitr::kable(
+  data.frame(STUDENT_NAME,STUDENT_NUMBER,WORK),
+  caption = "WORK DISTRIBUTION",
+  align = c('c','c','l')
+) 
+teamtable
 
 ```
 
@@ -46,9 +48,9 @@ knitr::kable(
   
 团队知识结构如下图所示：
 
-```{r ability, echo=FALSE}
-ability <- data.frame(collection=c(8,5,5),visualization=c(7,6,6),machine_learning=c(4,4,5),computer_science=c(6,7,6),statistic=c(6,5,7),math=c(4,6,6),row.names=c("曹霞","黄雅雯","赵玉娇"))
-barplot(as.matrix(ability),col=cm.colors(5),names.arg=c("资料搜集","数据可视化","机器学习","计算机科学","统计学","数学"),legend=rownames(ability),args.legend=c(x=8,y=22.1),cex.names = 0.7,xlab="团队技能")
+```{r ability,echo=FALSE}
+ability <- data.frame(collection=c(8,5,5),visualization=c(7,6,6),machine_learning=c(4,4,5),computer_science=c(6,7,6),statistic=c(6,5,7),math=c(4,6,6),row.names=c("曹 霞","黄雅雯","赵玉娇"))
+barplot(as.matrix(ability),col=cm.colors(5),names.arg=c("资料搜集","数据可视化","机器学习","计算机科学","统计学","数学"),legend=rownames(ability),args.legend=c(x=7.5,y=21.6),cex.names = 0.7,xlab="团队技能")
 ```
 
 ## **协同方式**
@@ -86,20 +88,20 @@ barplot(as.matrix(ability),col=cm.colors(5),names.arg=c("资料搜集","数据�
 >　　据联合国发布的《世界幸福报告》显示,在156个受调查的国家中,2016-2018年中国的幸福感排名93，2010年起我国GDP总量已经超过日本, 成为仅次于美国的世界第二大经济体,但居民的幸福感排名却落后于大多数国家。
 
 ```{r}
-image_path = "C:/Users/ZYJ/Desktop/happinessdata/dm/image_one.png"  
+image_path = "image_one.png"  
 rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 ```
 　　从2005-2008到2016-2018，中国的幸福感排名增加了0.426，这表明近年来随着政府对民生问题的关注以及相关政策的实施,我国国民幸福感在逐渐提升。但这一表现仍与我国经济增长速度并不匹配。因此, 有必要进一步研究影响国民幸福感的深层次原因。      
 
 ```{r}
-image_path = "C:/Users/ZYJ/Desktop/happinessdata/dm/image_two.png"  
+image_path = "image_two.png"  
 rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 ```
   　　
 　　该报告中幸福感排名是基于对调查中提出的主要生活评估问题的回答。它要求受访者将自己当前的生活评定为0到10级，其中最好的可能生活是10级，最坏的可能生活是0级，这也叫做Cantril阶梯（Cantril Ladder）。此外，报告中统计了另外两个衡量幸福感的指标（积极影响、消极影响）和六个反应居民生活水平的变量。从报告中我们可以发现，中国的Ladder排名为93，Ladder的标准差排名为72，积极影响排名为21，消极影响排名为11，社会支持排名为108，自由程度排名为31，慷慨程度为133，人均GDP排名为68，预期寿命排名为34。 
   
 ```{r}
-image_path = "C:/Users/ZYJ/Desktop/happinessdata/dm/image_three.png"  
+image_path = "image_three.png"  
 rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 ```
   <p align="right">[*《世界幸福报告》*](https://s3.amazonaws.com/happiness-report/2019/WHR19.pdf)</p>
@@ -110,7 +112,7 @@ rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 
 1.  读入数据
 ```{r}
-setwd("C:/Users/ZYJ/Desktop/happinessdata")
+#setwd("C:/Users/ZYJ/Desktop/happinessdata")
 library(tidyverse)
 data_original<-read.csv("happiness_train_abbr.csv")
 ```
@@ -123,7 +125,7 @@ tail(data_original)   #tail()输出数据框的后5行
 3.  读入变量的含义    
 
 ```{r}
-data_index<-read.csv("C:/Users/ZYJ/Desktop/happinessdata/happiness_index_1.csv")
+data_index<-read.csv("happiness_index_1.csv")
 data_index
 ```
        
@@ -328,7 +330,12 @@ ggplot(data,aes(x=happiness,fill=happiness))+geom_bar()+theme(aspect.ratio = 1)+
 
 ```{r}
 #根据religion与happiness绘制热度图
-p1<-data %>% count(religion,happiness) %>%ggplot(mapping=aes(religion,happiness))+geom_tile(mapping=aes(fill=n))+labs(title=("religion & happiness"))+theme(plot.title = element_text(hjust = 0.5)) 
+p1<-data %>% 
+  count(religion,happiness)%>%
+  ggplot(mapping=aes(religion,happiness))+
+  geom_tile(mapping=aes(fill=n))+
+  labs(title=("religion & happiness"))+
+  theme(plot.title = element_text(hjust = 0.5)) 
 #用labs()添加标题
 #用theme()将标题居中
 ```
@@ -599,10 +606,10 @@ ggplot(workdata, aes(happiness, income,colour=happiness))+coord_flip()+
 
 **探索省份（province）与幸福感（happiness)的关系**
 
-```{r province,message=FALSE}
+```{r province}
 
 #根据省份分组查看各省份幸福感均值
-happiness_meanp <- summarise(group_by(data,province),meanp=mean(as.numeric(happiness)))
+happiness_meanp <- summarise(group_by(data,province),meanp=mean(as.numeric(as.character(happiness))))
 
 #添加一个省份名称NAME变量
 happiness_meanp$NAME <- NA
@@ -646,44 +653,84 @@ happiness_meanp <- within(happiness_meanp,{
 #查看各省份幸福感均值
 happiness_meanp[c(1,3,2)]
 ```
--  由表可知，广西壮族自治区的幸福感均值最低为3.623188，河北省幸福感均值最高为4.107143，但总体幸福感相差不大。
+-  由表可知，广西壮族自治区的幸福感均值最低为3.623188，河北省幸福感均值最高为4.107143，但各省份总体幸福感均值相差不大。
 
 ## **教育因素与幸福感**
 
 **探索教育（edu）与幸福感（happiness)的关系**
 
-```{r edu,message=FALSE}
+```{r edu1}
 #根据教育变量分组查看各教育程度幸福感均值
-happiness_meane <- summarise(group_by(data,edu),meane=mean(as.numeric(happiness)))
+happiness_meane <- summarise(group_by(data,edu),meane=mean(as.numeric(as.character(happiness))))
 
-happiness_meane
+#添加一个省份名称NAME变量
+happiness_meane$MEAN<- NA
+
+#根据问卷含义给NAME赋值
+happiness_meane <- within(happiness_meane,{
+  MEAN[edu==-8] <- "无法回答"
+  MEAN[edu==1] <- "没有受过任何教育"
+  MEAN[edu==2] <- "私塾、扫盲班"
+  MEAN[edu==3] <- "小学"
+  MEAN[edu==4] <- "初中"
+  MEAN[edu==5] <- "职业高中"
+  MEAN[edu==6] <- "普通高中"
+  MEAN[edu==7] <- "中专"  
+  MEAN[edu==8] <- "技校"
+  MEAN[edu==9] <- "大学专科（成人高等教育）"
+  MEAN[edu==10] <- "大学专科（正规高等教育）"
+  MEAN[edu==11] <- "大学本科（成人高等教育）"
+  MEAN[edu==12] <- "大学本科（正规高等教育）"
+  MEAN[edu==13] <- "研究生及以上"
+  MEAN[edu==14] <- "其他"
+}
+  )
+
+happiness_meane[c(1,3,2)]
 
 #查看各教育程度的人数
+
 ggplot(data,aes(x=edu,fill=edu))+
   geom_bar(stat="count")+
-  #theme(axis.text.x = element_text(angle = 90) )
-  coord_polar(theta = "y", start = 0, direction = 1, clip = "on")
+  coord_polar(theta = "x", start = 0, direction = 1, clip = "on")
 
 #查看各教育程度的均值
+
 ggplot(data = happiness_meane,mapping=aes(x=edu,y=meane))+
-  geom_bar(stat = "identity",fill="steelblue",alpha=2/3)+
-  coord_cartesian(ylim=c(3,5))
+  geom_bar(stat = "identity",fill=topo.colors(length(happiness_meane$edu)))+
+  coord_cartesian(ylim=c(3,4.5))
+
+
 
 ```
 
--  由图分析，幸福感均值最大致值出现在教育程度为13（研究生及以上）处，但除去-8（未回答），其余教育程度的幸福感均值都在3.5以上，相差不大。因此，教育程度对幸福感产生没有太大影响。
+-  由图表分析可知，幸福感均值最大致值出现在教育程度为13（研究生及以上）处，且除-8（无法回答）之外，其余教育程度的幸福感均值都在3.5以上，相差不大。因此，从均值上看教育程度在整体上对幸福感产生没有太大影响。
 
-```{r}
-#列表和分组画图查看各教育程度与各幸福等级的占比
-sjPlot::sjt.xtab(data$happiness,data$edu,show.col.prc = TRUE,show.row.prc = TRUE)
-sjPlot::sjp.xtab(data$happiness,data$edu,show.total = FALSE,show.prc = FALSE,show.n = FALSE)
+```{r edu2}
+#教育变量分类过多，因此我们创建新的教育变量edu1,使分析更加简洁明了
+
+data$edu1 <- NA
+data$edu1[as.numeric(as.character(data$edu)) == -8] <- "0 其他"
+data$edu1[as.numeric(as.character(data$edu)) > -8 & as.numeric(as.character(data$edu)) <= 3] <- "1 小学及以下"
+data$edu1[as.numeric(as.character(data$edu)) == 4] <- "2 初中"
+data$edu1[as.numeric(as.character(data$edu)) >= 5&as.numeric(as.character(data$edu)) <= 8] <- "3 高中/职校"
+data$edu1[as.numeric(as.character(data$edu)) >= 9&as.numeric(as.character(data$edu)) <= 10] <- "4 专科"
+data$edu1[as.numeric(as.character(data$edu)) >= 11&as.numeric(as.character(data$edu)) <= 12] <- "5 本科"
+data$edu1[as.numeric(as.character(data$edu)) == 13] <- "6 研究生及以上"
+data$edu1 <- as.factor(data$edu1)
+
+#画分组条形图查看各教育程度与各幸福等级的关系
+
+sjPlot::sjp.xtab(data$edu1,data$happiness,show.total = FALSE,show.prc = FALSE,show.n = FALSE)
+
 ```
+-  由上图可以看出教育程度在小学及以下、初中的群体中，感觉不幸福（happiness<3)的人数占比会大于幸福(happiness>3)的人数，教育程度为初中以上的感到幸福的人数占比会超过不幸福的人数。因此，从单个教育水平来看，教育水平较高的人群中，幸福人数的比重会比较大。
 
 ## **社会认知与幸福感**
 
 **探索社会公平（equity）与幸福感（happiness)的关系**
 
-```{r equity,include=TRUE}
+```{r equity}
 
 #查看各社会公平认知水平下不同幸福感的人数分布
 
@@ -692,19 +739,255 @@ data%>%
   ggplot(mapping = aes(equity,happiness))+
   geom_tile(mapping = aes(fill=n))
 
-table1 <- sjPlot::sjt.xtab(data$happiness,data$equity,show.col.prc = TRUE,show.row.prc = TRUE) 
-
 ```
- -  非常不幸福的人中间认为社会完全不公平的占比最多为45.2%；非常幸福的人中间认为社会比较公平的占比最多为53.5%；从整体上看，认为社会比较公平且比较幸福的人占比最多。因此判断社会公平的建设有助于提高公民幸福感。
+
+-  由热度图可知，比较幸福（happiness=4）且认为社会比较公平（equity=4）的人人数最多。    
+
+```{r fig.width=10,fig.height=6}
+sjPlot::sjp.xtab(data$equity,data$happiness,show.total = FALSE,show.prc = TRUE,show.n = FALSE) 
+```
+
+-  由上图分析可知，非常不幸福的人中间认为社会完全不公平的占比最多为45.2%；非常幸福的人中间认为社会比较公平的占比最多为53.5%；从整体上看，认为社会比较公平且比较幸福的人占比最多。因此判断社会公平的建设有助于提高公民幸福感。
 
 **探索个人观点与社会观点的一致性（view）与幸福感（happiness)的关系**
 
-```{r view}
-#列表和分组画图查看观点一致性与各幸福等级的占比
-sjp.xtab(data$happiness,data$view,show.total = FALSE,show.prc = TRUE,show.n = FALSE)
-sjPlot::sjt.xtab(data$happiness,data$view,show.col.prc = TRUE,show.row.prc = TRUE)
-```
--  分析可知，比较幸福（happiness=4）并且与社会大众认知基本保持一致（view>=3)的人数占主体。
+```{r view,fig.width=10,fig.height=12}
+#画图查看观点一致性与各幸福等级的占比
+pic1 <- sjp.xtab(data$happiness,data$view,show.total = FALSE,show.prc = TRUE,show.n = FALSE)
+pic2 <- sjp.xtab(data$view,data$happiness,show.total = FALSE,show.prc = TRUE,show.n = FALSE)
 
+ggarrange(pic1,pic2,nrow=2,labels=c("(1)","(2)"))
+```
+-  如图(1)所示，比较幸福(happiness=4)并且与社会大众观点一致的时候比较多(view=4)的人数占比最多。不幸福(happiness<=2)的群体中，与社会观点基本不一致(view<=3)的人占主导，幸福(happiness>=4)的群体中，与社会观点基本一致(view>=4)的人占主导。  
+-  如图(2)所示，与社会观点基本不一致（view<=3）的群体中，感觉不幸福的人数占比会大于幸福的人数，与社会观点基本一致（view>=4）的群体中觉得幸福的人数占比会超过不幸福的人数。
+
+
+# **有序因变量回归**
+
+## **模型构建和分析**
+
+**对于有次序的分类变量或者离散变量可以采用有序因变量回归。 该模型可以提供高低不同层次之间的两两比较和累积概率**   
+**一般而言，回归系数β>0表明随解释变量正向变化，选择将、较高等级的可能性增加，选择较低等级的可能性下降；若回归系数β<0,反之。**
+
+```{r ordinal_regression}
+
+library(ordinal)
+#去除异常值-8
+fmdata <- data%>%
+  filter(health != -8,edu != -8,equity != -8,view != -8,inc_ability != -8)
+
+#对收入进行对数变换，减少多重共线性，并在一定程度上消除量纲的影响
+fmdata$income1 <- log(fmdata$income + 1)
+
+#未回答的收入值-8进行对数变换后会产生NaN值，会影响回归分析，此处我们去掉含NaN记录
+fmdata <- na.omit(fmdata)
+
+#构建一个新的变量happy存储happiness含义
+fmdata$happy <- NA
+fmdata$happiness <- as.character(fmdata$happiness)
+fmdata$happy[as.numeric(fmdata$happiness)==1] <- "1 非常不幸福"
+fmdata$happy[as.numeric(fmdata$happiness)==2] <- "2 比较不幸福"
+fmdata$happy[as.numeric(fmdata$happiness)==3] <- "3 说不上幸福不幸福"
+fmdata$happy[as.numeric(fmdata$happiness)==4] <- "4 比较幸福"
+fmdata$happy[as.numeric(fmdata$happiness)==5] <- "5 非常幸福"
+fmdata$happiness <- as.factor(fmdata$happiness)
+fmdata$happy <- as.factor(fmdata$happy)
+
+#给变量重新赋值，使结果显示更明显
+
+fmdata$survey_type <- as.character(fmdata$survey_type)
+fmdata$survey_type[as.numeric(fmdata$survey_type)==1] <- "1 城市"
+fmdata$survey_type[as.numeric(fmdata$survey_type)==2] <- "2 农村"
+fmdata$survey_type <- as.factor(fmdata$survey_type)
+
+fmdata$gender <- as.character(fmdata$gender)
+fmdata$gender[as.numeric(fmdata$gender)==1] <- "1 男"
+fmdata$gender[as.numeric(fmdata$gender)==2] <- "2 女"
+fmdata$gender <- as.factor(fmdata$gender)
+
+fmdata$health <- as.character(fmdata$health)
+fmdata$health[as.numeric(fmdata$health)==1] <- "1 很不健康"
+fmdata$health[as.numeric(fmdata$health)==2] <- "2 比较不健康"
+fmdata$health[as.numeric(fmdata$health)==3] <- "3 一般"
+fmdata$health[as.numeric(fmdata$health)==4] <- "4 比较健康"
+fmdata$health[as.numeric(fmdata$health)==5] <- "5 很健康"
+fmdata$health <- as.factor(fmdata$health)
+
+fmdata$equity <- as.character(fmdata$equity)
+fmdata$equity[as.numeric(fmdata$equity)==1] <- "1 完全不公平"
+fmdata$equity[as.numeric(fmdata$equity)==2] <- "2 比较不公平"
+fmdata$equity[as.numeric(fmdata$equity)==3] <- "3 说不上公平不公平"
+fmdata$equity[as.numeric(fmdata$equity)==4] <- "4 比较公平"
+fmdata$equity[as.numeric(fmdata$equity)==5] <- "5 完全公平"
+fmdata$equity <- as.factor(fmdata$equity)
+
+fmdata$view <- as.character(fmdata$view)
+fmdata$view[as.numeric(fmdata$view)==1] <- "1 非常少"
+fmdata$view[as.numeric(fmdata$view)==2] <- "2 比较少"
+fmdata$view[as.numeric(fmdata$view)==3] <- "3 一般"
+fmdata$view[as.numeric(fmdata$view)==4] <- "4 比较多"
+fmdata$view[as.numeric(fmdata$view)==5] <- "5 非常多"
+fmdata$view <- as.factor(fmdata$view)
+
+fmdata$inc_ability <- as.character(fmdata$inc_ability)
+fmdata$inc_ability[as.numeric(fmdata$inc_ability)==1] <- "1 非常合理"
+fmdata$inc_ability[as.numeric(fmdata$inc_ability)==2] <- "2 合理"
+fmdata$inc_ability[as.numeric(fmdata$inc_ability)==3] <- "3 不合理"
+fmdata$inc_ability[as.numeric(fmdata$inc_ability)==4] <- "4 非常不合理"
+fmdata$inc_ability <- as.factor(fmdata$inc_ability)
+
+
+#选用cumalative link model模型进行拟合
+fm1 <- clm(happy~survey_type+gender+edu1+income1+health+equity+view+inc_ability,data=fmdata)
+
+summary(fm1)
+```
+
+-  由拟合结果分析可知，性别、身体状况、社会公平性、收入合理性等因素对幸福感有显著影响
+-  对比男性，女性更倾向于选择较高的幸福感选项
+-  对比参照组（很不健康），个体越健康，处于较高幸福感的可能性就越大
+-  对比参照组（认为社会非常不公平），个体越认为社会公平，处于较高幸福感的可能性越大
+-  对比参照组（认为收入非常合理），个体认为收入越不合理，处于较高幸福感的可能性越小
+
+```{r}
+#加入收入合理性与收入的交互项inc_ability:income1，检验其是否有交互效应
+fm2 <- clm(happy~survey_type+gender+edu1+income1+health+equity+view+inc_ability+inc_ability:income1,data=fmdata)
+summary(fm2)
+
+```
+
+-  结果显示，收入合理性与收入的交互效应并不显著
+
+```{r}
+#逐步回归
+fm3 <- step(fm2)
+summary(fm3)
+```
+
+-  由逐步回归结果可得happiness ~ survey_type + gender + edu1 + income1 + health + equity + view + inc_ability，去掉了不显著的交互项inc_ability:income1。
+
+## **模型结果可视化**
+```{r visualize}
+library(ggeffects)
+
+dat1 <- ggpredict(fm3,terms = list("health"))
+plot(dat1,facet = TRUE)+
+  geom_line()+
+  theme(axis.text.x = element_text(angle = 30,hjust = 1))
+```
+
+-  每一个图画框代表一个幸福水平下不同健康效果的效应。1 非常不幸福水平下，每个健康水平的个体概率相差不大; 2 比较不幸福水平下，各健康水平选择它的概率也较为平均，很不健康的人选择它的概率会相对较大;3 说不上幸福不幸福水平下，很不健康的人选择它的概率较大，后随健康水平提高概率逐渐减小;4 比较幸福水平下，各健康水平选择它的概率都较大，随健康水平提高，概率呈上升趋势;5 非常幸福水平下，各健康水平的群体选择它的概率随健康水平提高而上升。 
+
+```{r}
+dat2 <- ggpredict(fm3,terms = list("gender"))
+plot(dat2,facet = TRUE)+
+  geom_line()
+```
+
+-  各层次幸福感中，性别体现的差距不大。
+
+```{r}
+dat3 <- ggpredict(fm3,terms = list("income1"))
+plot(dat3,facet = TRUE)+
+  geom_line()
+```
+
+-  由图分析，工资水平越高，其选择的高等级幸福感的概率会越大。
+
+
+# **神经网络建模分析**
+    
+```{r balance data}
+library(ROSE)
+library(caret)
+#非平衡数据处理
+
+BPdata <- fmdata[c("happiness","survey_type","gender","edu1","income","health","equity","view","inc_ability")]
+
+#将因子变量转换为数值变量，便于回归分析
+BPdata$happyn <- NA
+BPdata$happyn <- as.numeric(levels(BPdata$happiness))[BPdata$happiness]
+BPdata$income1 <- log(BPdata$income+1)
+
+#样本数据不平衡会影响预测结果准确性
+BPdata$newhappy <- NA
+BPdata$newhappy[BPdata$happyn <= 3] <- "unhappy"
+BPdata$newhappy[BPdata$happyn >= 4] <- "happy"
+plot_frq(BPdata$newhappy)
+
+rose_train <- ROSE(newhappy~survey_type+gender+edu1+income1+health+equity+view+inc_ability,data=BPdata)
+plot_frq(rose_train$data$newhappy)
+  #ROSE(formula, data, N, p=0.5, hmult.majo=1, hmult.mino=1,...)
+  #通过扩大少数类和多数类样本的特征空间来创建合成数据的样本。
+
+```
+```{r BP,results="hide"}
+nnet <- train(newhappy~survey_type+gender+edu1+income1+health+equity+view+inc_ability,data=rose_train$data,"nnet")
+```
+
+```{r}
+confusionMatrix(nnet)
+```
+
+-  使用nnet预测的成功概率为69.66%，大于随机猜测50%，因此认为神经网络预测效果较好。
+
+**模拟人脑神经网络反射图**
+
+```{r fig.width=17,fig.height=16}
+library(NeuralNetTools)
+plotnet(nnet)
+```
+
+**图形输出查看变量影响力**
+```{r fig.width=10}
+garson(nnet)+
+  theme(axis.text.x = element_text(angle = 50,hjust = 1))
+```
+
+-  由上图对神经网络预测过程中变量重要性的排序，可以看出，健康是排在第一位的，社会公平、社会观点一致性、收入公平性等因素紧随其后。
+
+# **GitHub工作总结**
+
+**1  使用步骤**
+
+-  注册GitHub
+-  由一组员新建Organization并邀请组员
+-  在组织中创建仓库
+-  安装Git并配置ssh key
+-  将ssh key添加到Organization的deploy key中
+-  远程仓库使用  
+   -  在git bash中输入git init命令初始化git
+   -  使用git add file添加文件并使用git commit -m "informantion"输入提交信息
+   -  使用git remote add origin git@github.com:yourName/yourRepo.git添加远程仓库
+   -  使用git push origin master提交到Github
+   -  提交文件成功
+-  后续同步远程仓库与本地仓库使用git fetch和git merge命令
+-  注：提交文件及更新操作也可以直接在网页端进行提交和编辑
+
+-  **[团队仓库地址](https://github.com/bdanalysisc)**
+
+**2  遇到的问题及解决措施**
+
+>$ git push origin master    
+To github.com:bdanalysisc/test.git   
+ ! [rejected]        master -> master (non-fast-forward)  
+error: failed to push some refs to 'git@github.com:bdanalysisc/test.git'    
+hint: Updates were rejected because the tip of your current branch is behind  
+hint: its remote counterpart. Integrate the remote changes (e.g.  
+hint: 'git pull ...') before pushing again.  
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+-  问题1：提交文件至GitHub时出现如上错误提示
+   -  原因：在建立本地仓库与远程仓库联系时，两个仓库内含不同文件，需要合并
+   -  **解决措施: $  git pull origin master --allow-unrelated-histories**  
+   
   
-  
+-  问题2：组织成员无法提交修改，只能提出pull request
+   -  原因：该成员在该仓库权限为read，无法修改
+   -  **解决措施：组织拥有者在组织的设置里把该成员的Member Privilege设置成Write或者Admin**
+   
+**3  工作感想与总结**
+
+-  GitHub是一个很好用的项目托管平台，与git结合使用对于文件更新操作十分便利。
+-  使用Organization团队成员可以及时沟通项目进度，汇总文档。
+-  在大批量上传文件时，建议直接在网页端上传，会比用git添加文件更方便。对某文档进行更新操作时，使用git merge更方便。
