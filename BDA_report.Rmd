@@ -416,30 +416,29 @@ healthdata <- data[c("happiness","age","BMI","health","health_problem","depressi
  **探索年龄(age)与幸福感(happiness)的关系**    
 
 ```{r}
-
-# 构建新的数据框，用来存放年龄以及对应年龄样本的幸福感的平均值
+#构建新的数据框，用来存放年龄以及对应年龄样本的幸福感的平均值
 age_happiness <-data.frame(age=numeric(0),happiness=numeric(0))
-for(i in 18:94) #年龄的范围是18-94
+for(i in 18:94)
 {
   agenew <- i
   happiness_meanbyage <- mean(as.numeric(as.character(healthdata$happiness[healthdata$age==i])))
   newcol<-data.frame(age=agenew,happiness=happiness_meanbyage)
   age_happiness <- rbind(age_happiness,newcol)
 }
-# 画出年龄与对应幸福感均值的折线图，并画出平滑曲线
-ggplot(data=age_happiness,mapping=aes(x=age,y=happiness))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
-
 ```
+```{r}
+#画出年龄与对应幸福感均值的折线图，并画出平滑曲线
+ggplot(data=age_happiness,mapping=aes(x=age,y=happiness))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
+```
+
 
 - 由上图可以看出，随着年龄的增长，幸福感呈先下降再上升的趋势  
 
 **探索年龄(age)与健康状况(health)的关系**
 
 ```{r}
-
 #构建新的数据框，用来存放年龄以及对应年龄样本的健康状况的平均值
 age_health <-data.frame(age=numeric(0),health=numeric(0))
-
 for(i in 18:94)
 {
   agenew <- i
@@ -448,20 +447,21 @@ for(i in 18:94)
   age_health <- rbind(age_health,newcol)
 }
 
-# 画出年龄与对应样本健康状况平均值均值的折线图，并画出平滑曲线
+```
+```{r}
+#画出年龄与对应样本健康状况平均值均值的折线图，并画出平滑曲线
 ggplot(data=age_health,mapping=aes(x=age,y=health))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
 
 ```
+
 
 - 由上图可以看出，随着年龄的增长，健康状况明显下降  
 
 **探索年龄(age)、健康(health)与幸福感(happiness)的关系**
 
 ```{r}
-
-# 构建新的数据框，用来存放不同年龄、不同健康状况样本对应幸福感的平均值
+#构建新的数据框，用来存放不同年龄、不同健康状况样本对应幸福感的平均值
 age_happiness_byhealth <- data.frame(age=numeric(0),health=numeric(0),happiness=numeric(0))
-
 for(i in 18:94)
 {
   for(j in 1:5)
@@ -473,10 +473,10 @@ for(i in 18:94)
       age_happiness_byhealth <- rbind(age_happiness_byhealth,newcol)
   }
 }
-
-# 画出散点图，年龄为横坐标，幸福感为纵坐标，颜色的深浅代表不同的健康状况
+```
+```{r}
+#画出散点图，年龄为横坐标，幸福感为纵坐标，颜色的深浅代表不同的健康状况
 ggplot(age_happiness_byhealth,mapping=aes(x=age,y=happiness,colour=health))+geom_point()
-
 ```
 
 - 上图表明，在任何年龄，都是健康状况越好，则幸福感越高  
@@ -567,7 +567,6 @@ manage_happiness
 **探索工作年限(work_yr)与幸福感(happiness)的关系**  
 
 ```{r}
-
 # 构建新的数据框，用来存放不同的工作年限以及其对应样本的幸福感的平均值
 work_year_happiness <-data.frame(work_year=numeric(0),happiness=numeric(0))
 for(i in 0:60)
@@ -577,10 +576,14 @@ for(i in 0:60)
   newcol<-data.frame(work_year=work_yearnew,happiness=happiness_meanbywork_year)
   work_year_happiness <- rbind(work_year_happiness,newcol)
 }
+
+```
+```{r}
 # 画出工作年限与对应样本幸福感平均值均值的折线图，并画出平滑曲线
 ggplot(data=work_year_happiness,mapping=aes(x=work_year,y=happiness))+geom_line()+stat_smooth(fill = "red", size = 2, alpha = 0.5, color = "green")
 
 ```
+
 
 - 由图看出，工作年限小于35年时，幸福感并无显著变化，工作年限大于35年后，幸福感呈缓慢上升趋势，这可能与年龄的增长对幸福感造成的影响有关    
 
@@ -705,9 +708,6 @@ ggplot(data,aes(x=edu,fill=edu))+
 ggplot(data = happiness_meane,mapping=aes(x=edu,y=meane))+
   geom_bar(stat = "identity",fill=topo.colors(length(happiness_meane$edu)))+
   coord_cartesian(ylim=c(3,4.5))
-
-
-
 ```
 
 -  由图表分析可知，幸福感均值最大致值出现在教育程度为13（研究生及以上）处，且除-8（无法回答）之外，其余教育程度的幸福感均值都在3.5以上，相差不大。因此，从均值上看教育程度在整体上对幸福感产生没有太大影响。
@@ -767,16 +767,16 @@ ggarrange(pic1,pic2,nrow=2,labels=c("(1)","(2)"))
 -  如图(1)所示，比较幸福(happiness=4)并且与社会大众观点一致的时候比较多(view=4)的人数占比最多。不幸福(happiness<=2)的群体中，与社会观点基本不一致(view<=3)的人占主导，幸福(happiness>=4)的群体中，与社会观点基本一致(view>=4)的人占主导。  
 -  如图(2)所示，与社会观点基本不一致（view<=3）的群体中，感觉不幸福的人数占比会大于幸福的人数，与社会观点基本一致（view>=4）的群体中觉得幸福的人数占比会超过不幸福的人数。
 
-# 建立模型    
+# **建立模型**    
       
-## 多元线性回归模型   
+## **多元线性回归模型**   
 
 - 流程：    
     -  利用主成分分析法进行数据降维    
     -  利用提取的主成分进行多元线性回归模型的建立  
     -  回归模型的检验    
 
-###  数据降维:主成分分析法PCA   
+###  **数据降维:主成分分析法PCA**   
 
 
 1. 数据标准化  
@@ -845,7 +845,7 @@ unclass(rc$weights)
 
 
 
-## 多元线性回归  
+## **多元线性回归**  
 
 1. 将原始数据转化为11个因子
 ```{r}
@@ -871,7 +871,7 @@ newfit <- lm(V12 ~ RC1+RC2+RC3+RC4+RC5+RC6+RC8+RC10+RC11,data=mydata_frame)
 summary(newfit)
 ```
 
-## 回归诊断   
+## **回归诊断**   
 
 - 为了能够恰当地解释OLS模型的系数，数据必须满足以下统计假设：  
     1).  正态性:对于固定的自变量值,因变量值成正态分.
@@ -921,7 +921,7 @@ summary(gvmodel)
 - 不满足Global Stat,SkewneSs(偏斜度)、Kurtosis(峰度的假设);满足Link Function(链结函数)和Heterosecdasticity(异方差性)的假设.
 
 
-## 广义线性模型扩展：泊松回归  
+## **广义线性模型扩展：泊松回归**  
 
 - 当通过一系列连续型和/或类别型预测变量来预测计数型因变量时，泊松回归是常用的工具   
 
@@ -1044,18 +1044,17 @@ summary(model3)
 **一般而言，回归系数β>0表明随解释变量正向变化，选择将、较高等级的可能性增加，选择较低等级的可能性下降；若回归系数β<0,反之。**
 
 ```{r ordinal_regression}
-
 library(ordinal)
 #去除异常值-8
 fmdata <- data%>%
-  filter(health != -8,edu != -8,equity != -8,view != -8,inc_ability != -8)
-
+  filter(health != -8,edu != -8,equity != -8,view != -8,inc_ability != -8) 
 #对收入进行对数变换，减少多重共线性，并在一定程度上消除量纲的影响
 fmdata$income1 <- log(fmdata$income + 1)
-
 #未回答的收入值-8进行对数变换后会产生NaN值，会影响回归分析，此处我们去掉含NaN记录
 fmdata <- na.omit(fmdata)
+```
 
+```{r}
 #构建一个新的变量happy存储happiness含义
 fmdata$happy <- NA
 fmdata$happiness <- as.character(fmdata$happiness)
@@ -1067,6 +1066,15 @@ fmdata$happy[as.numeric(fmdata$happiness)==5] <- "5 非常幸福"
 fmdata$happiness <- as.factor(fmdata$happiness)
 fmdata$happy <- as.factor(fmdata$happy)
 
+fmdata$inc_ability <- as.character(fmdata$inc_ability)
+fmdata$inc_ability[as.numeric(fmdata$inc_ability)==1] <- "1 非常合理"
+fmdata$inc_ability[as.numeric(fmdata$inc_ability)==2] <- "2 合理"
+fmdata$inc_ability[as.numeric(fmdata$inc_ability)==3] <- "3 不合理"
+fmdata$inc_ability[as.numeric(fmdata$inc_ability)==4] <- "4 非常不合理"
+fmdata$inc_ability <- as.factor(fmdata$inc_ability)
+```
+
+```{r}
 #给变量重新赋值，使结果显示更明显
 
 fmdata$survey_type <- as.character(fmdata$survey_type)
@@ -1102,20 +1110,15 @@ fmdata$view[as.numeric(fmdata$view)==3] <- "3 一般"
 fmdata$view[as.numeric(fmdata$view)==4] <- "4 比较多"
 fmdata$view[as.numeric(fmdata$view)==5] <- "5 非常多"
 fmdata$view <- as.factor(fmdata$view)
+```
 
-fmdata$inc_ability <- as.character(fmdata$inc_ability)
-fmdata$inc_ability[as.numeric(fmdata$inc_ability)==1] <- "1 非常合理"
-fmdata$inc_ability[as.numeric(fmdata$inc_ability)==2] <- "2 合理"
-fmdata$inc_ability[as.numeric(fmdata$inc_ability)==3] <- "3 不合理"
-fmdata$inc_ability[as.numeric(fmdata$inc_ability)==4] <- "4 非常不合理"
-fmdata$inc_ability <- as.factor(fmdata$inc_ability)
-
-
+```{r}
 #选用cumalative link model模型进行拟合
-fm1 <- clm(happy~survey_type+gender+edu1+income1+health+equity+view+inc_ability,data=fmdata)
+fm1 <- clm(happy ~ survey_type + gender + edu1 + income1 + health + equity + view + inc_ability,data=fmdata)
 
 summary(fm1)
 ```
+
 
 -  由拟合结果分析可知，性别、身体状况、社会公平性、收入合理性等因素对幸福感有显著影响
 -  对比男性，女性更倾向于选择较高的幸福感选项
@@ -1124,27 +1127,18 @@ summary(fm1)
 -  对比参照组（认为收入非常合理），个体认为收入越不合理，处于较高幸福感的可能性越小
 
 ```{r}
-#加入收入合理性与收入的交互项inc_ability:income1，检验其是否有交互效应
-fm2 <- clm(happy~survey_type+gender+edu1+income1+health+equity+view+inc_ability+inc_ability:income1,data=fmdata)
-summary(fm2)
-
-```
-
--  结果显示，收入合理性与收入的交互效应并不显著
-
-```{r}
 #逐步回归
-fm3 <- step(fm2)
-summary(fm3)
+fm2 <- step(fm1)
+summary(fm2)
 ```
 
--  由逐步回归结果可得happiness ~ survey_type + gender + edu1 + income1 + health + equity + view + inc_ability，去掉了不显著的交互项inc_ability:income1。
+-  由逐步回归结果可得happiness ~ survey_type + gender + edu1 + income1 + health + equity + view + inc_ability。
 
 ### **模型结果可视化**
 ```{r visualize}
 library(ggeffects)
 
-dat1 <- ggpredict(fm3,terms = list("health"))
+dat1 <- ggpredict(fm2,terms = list("health"))
 plot(dat1,facet = TRUE)+
   geom_line()+
   theme(axis.text.x = element_text(angle = 30,hjust = 1))
@@ -1153,7 +1147,7 @@ plot(dat1,facet = TRUE)+
 -  每一个图画框代表一个幸福水平下不同健康效果的效应。1 非常不幸福水平下，每个健康水平的个体概率相差不大; 2 比较不幸福水平下，各健康水平选择它的概率也较为平均，很不健康的人选择它的概率会相对较大;3 说不上幸福不幸福水平下，很不健康的人选择它的概率较大，后随健康水平提高概率逐渐减小;4 比较幸福水平下，各健康水平选择它的概率都较大，随健康水平提高，概率呈上升趋势;5 非常幸福水平下，各健康水平的群体选择它的概率随健康水平提高而上升。 
 
 ```{r}
-dat2 <- ggpredict(fm3,terms = list("gender"))
+dat2 <- ggpredict(fm2,terms = list("gender"))
 plot(dat2,facet = TRUE)+
   geom_line()
 ```
@@ -1161,7 +1155,7 @@ plot(dat2,facet = TRUE)+
 -  各层次幸福感中，性别体现的差距不大。
 
 ```{r}
-dat3 <- ggpredict(fm3,terms = list("income1"))
+dat3 <- ggpredict(fm2,terms = list("income1"))
 plot(dat3,facet = TRUE)+
   geom_line()
 ```
@@ -1170,14 +1164,17 @@ plot(dat3,facet = TRUE)+
 
 
 
-## 决策树  
+## **决策树**  
 
 ```{r}
 library(ROSE)
-# 在决策树中，我们采用和泊松回归同样的变量，将泊松回归整理过的数据集读入
+#在决策树中，我们采用和泊松回归同样的变量，将泊松回归整理过的数据集读入
 tree_data <- glm_data
 #将幸福感重新转换为因子型
 tree_data$happiness <- factor(tree_data$happiness)
+```
+
+```{r}
 #由于模型需要，将幸福感分为“happy”和“unhappy”分成两类
 tree_data$happiness <- as.character(tree_data$happiness)
 tree_data$happiness[tree_data$happiness==1|tree_data$happiness==2|tree_data$happiness==3] <- "unhappy"
@@ -1185,6 +1182,7 @@ tree_data$happiness[tree_data$happiness==4|tree_data$happiness==5] <- "happy"
 tree_data$happiness <- factor(tree_data$happiness)
 summary(tree_data$happiness)
 ```
+
 - 我们看到，幸福与不幸福的数据量差距较大，数据可能存在不平衡   
 
 **平衡数据**
@@ -1204,18 +1202,22 @@ summary(rose_train$happiness)
 library(caret)
 library(rpart)
 library(rattle)
-#利用原使不平衡的数据生成决策树
+#利用原始不平衡的数据生成决策树
 rpart1 <- train(happiness~religion+marital+health+age+income+equity+inc_ability,data=tree_data,"rpart")
 #利用平衡后的数据生成决策树
 rpart2 <- train(happiness~religion+marital+health+age+income+equity+inc_ability,data=rose_train,"rpart")
+```
+
+```{r}
 #混淆矩阵
 confusionMatrix(rpart1)
 confusionMatrix(rpart2)
 ```
-- 可以看出，对于未平衡的数据，正确率未79.18%，对于平衡后的数据集，正确率为66.98%    
-- 这主要是由于在非平衡数据中，模型倾向于将绝大部分（共有75.1% + 17.3% = 92.4%）的数据预测为幸福,而在平衡数据中，尽管正确率降低，但还是高于随机猜测的    
 
-## 输入决策模型并可视化  
+- 可以看出，对于未平衡的数据，正确率约为79%，对于平衡后的数据集，正确率约为67%    
+- 这主要是由于在非平衡数据中，模型倾向于将绝大部分的数据预测为幸福,而在平衡数据中，尽管正确率降低，但还是高于随机猜测的    
+
+## **输入决策模型并可视化**  
 
 ```{r}
 library(rpart.plot)
@@ -1232,9 +1234,8 @@ rpart.plot(rpart2$finalModel,extra=0,tweak=1,type=1)
   
 - 可以看出，这是一颗叶节点为3的决策树，这个简单的决策树预测模型的结论是，公平和健康是预测幸福感的重要因素
 
-
 ## **神经网络建模分析**
-    
+
 ```{r balance data}
 library(ROSE)
 library(caret)
@@ -1255,8 +1256,6 @@ plot_frq(BPdata$newhappy)
 
 rose_train <- ROSE(newhappy~survey_type+gender+edu1+income1+health+equity+view+inc_ability,data=BPdata)
 plot_frq(rose_train$data$newhappy)
-  #ROSE(formula, data, N, p=0.5, hmult.majo=1, hmult.mino=1,...)
-  #通过扩大少数类和多数类样本的特征空间来创建合成数据的样本。
 
 ```
 ```{r BP,results="hide"}
@@ -1270,7 +1269,7 @@ confusionMatrix(nnet)
 -  使用nnet预测的成功概率大于随机猜测50%，因此认为神经网络预测效果较好。
 
 **模拟人脑神经网络反射图**
-
+  
 ```{r fig.width=17,fig.height=16}
 library(NeuralNetTools)
 plotnet(nnet)
@@ -1329,3 +1328,10 @@ hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 -  GitHub是一个很好用的项目托管平台，与git结合使用对于文件更新操作十分便利。
 -  使用Organization团队成员可以及时沟通项目进度，汇总文档。
 -  在大批量上传文件时，建议直接在网页端上传，会比用git添加文件更方便。对某文档进行更新操作时，使用git merge更方便。
+
+#  **参考文献**
+
+-  谢颖.《R语言与社会科学调查数据分析》
+-  Robert I. Kabacoff.R in Action Data Analysis and Graphics with R
+-  Hadley Wickham,Garrett Grolemund.R for Data Science
+
