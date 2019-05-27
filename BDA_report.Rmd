@@ -32,7 +32,6 @@ teamtable <- knitr::kable(
   align = c('c','c','l')
 ) 
 teamtable
-
 ```
 
 ## **成员特长**
@@ -1268,7 +1267,7 @@ nnet <- train(newhappy~survey_type+gender+edu1+income1+health+equity+view+inc_ab
 confusionMatrix(nnet)
 ```
 
--  使用nnet预测的成功概率为69.66%，大于随机猜测50%，因此认为神经网络预测效果较好。
+-  使用nnet预测的成功概率大于随机猜测50%，因此认为神经网络预测效果较好。
 
 **模拟人脑神经网络反射图**
 
@@ -1283,7 +1282,7 @@ garson(nnet)+
   theme(axis.text.x = element_text(angle = 50,hjust = 1))
 ```
 
--  由上图对神经网络预测过程中变量重要性的排序，可以看出，健康是排在第一位的，社会公平、社会观点一致性、收入公平性等因素紧随其后。
+-  由上图可以清晰地看出对神经网络预测过程中变量重要性的排序。
 
 # **GitHub工作总结**
 
