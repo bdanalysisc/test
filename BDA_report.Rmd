@@ -3,14 +3,14 @@ title: "BDA_report"
 author: "曹霞 黄雅雯 赵玉娇"
 date: "2019/5/18"
 output:
+  html_document:
+    df_print: paged
+    toc: yes
+  github_document: default
   html_notebook:
     highlight: monochrome
     number_sections: yes
     theme: united
-    toc: yes
-  github_document: default
-  html_document:
-    df_print: paged
     toc: yes
 ---
 
@@ -22,6 +22,8 @@ output:
 knitr::opts_chunk$set(warning = FALSE,message = FALSE)
 library(tidyverse)
 library(sjPlot)
+```
+```{r echo=FALSE}
 STUDENT_NAME <- c("曹霞","黄雅雯","赵玉娇")
 STUDENT_NUMBER <- c("201643030","201638058","201629019")
 WORK <- c("1. 搜集有关“幸福感”的背景资料，包含幸福悖论、宗教、性别认同、住房等相关方面的背景  2. 主笔报告团队概况部分  3. 整理GitHub相关学习资料并撰写Github工作报告  4. 可视化分析教育、地域、社会认知等方面变量与主观幸福感的关系  5. 建模分析(有序因变量回归分析、神经网络分析）","1. 搜集有关“幸福感”的背景资料，包含政策、世界幸福感排名等相关资料  2. 主笔数据预处理部分  3. 可视化宗教信仰、生活方式、家庭状况等方面变量与主观幸福感的关系  4. 建模分析(多元线性回归及主成分分析、二分变量回归分析)","1. 搜集有关“幸福感”的背景资料，包含政治、经济等方面的背景 2. 主笔数据来源以及问题背景部分  3. 可视化身心健康、工作就业等变量与主观幸福感的关系  4. 建模分析(泊松回归分析、决策树建模分析)")
@@ -65,43 +67,42 @@ barplot(as.matrix(ability),col=cm.colors(5),names.arg=c("资料搜集","数据�
 # **研究背景**
 ## **历史背景**
 >　　国际上对幸福感的研究起始于二战后，从20世纪60年代逐步发展起来。Easterlin（1974，2010）最先研究了幸福与收入之间的关系，提出了“幸福悖论”，也称为“伊斯特林悖论”，即随着物质产品的丰富和收入水平的提升，人们并没有感觉更幸福，这类似一架“快乐水车”，尽管收入增长，但是幸福却没有同步增长。一个国家的主观幸福感随着经济发展上升到一定程度时，可能出现停滞或下降状态。随着时代的发展，“幸福悖论”也逐渐适用于中国。改革开放40年来，我国GDP持续高速增长，绝大多数居民的生活条件从根本上得到了改善，但是并无证据表明我国居民的幸福感呈现出与经济增长相匹配的提升。因此有必要对中国居民的幸福感进行研究。  
-    <p align="right">[*"户籍身份、社会分割与居民幸福感——基于不同影响机制的实证研究"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2019&filename=JJXJ201901012&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDM2MDZHNEg5ak1ybzlFWm9SOGVYMUx1eFlTN0RoMVQzcVRyV00xRnJDVVJMT2ZZdWRuRnlybFVyN0pMeWZUWkw=)</p>
+    <p align="right">["户籍身份、社会分割与居民幸福感——基于不同影响机制的实证研究"](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2019&filename=JJXJ201901012&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDM2MDZHNEg5ak1ybzlFWm9SOGVYMUx1eFlTN0RoMVQzcVRyV00xRnJDVVJMT2ZZdWRuRnlybFVyN0pMeWZUWkw=)</p>
   
 ## **政治背景**
 >　　党的十九大报告还特别强调了要把人民群众对美好生活的向往作为永远的奋斗目标，把人民的幸福快乐作为实现中国梦的重要标准，要让人们的幸福感、安全感、获得感更有保障、更充实、 更可持续。如何实现居民幸福感的提升，是各级政府进行社会治理工作需要关注的重要问题
-    <p align="right">[*"中国居民的生活方式与主观幸福感研究 ———基于 CGSS2015 数据的实证分析"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDPREP&filename=GHXY201901036&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDUwMDNMdXhZUzdEaDFUM3FUcldNMUZyQ1VSTE9mWXVkbkZ5cm1VcnZMSWlYVGQ3RzRIOWpNcm85R1lvUjhlWDE=)</p>
+    <p align="right">["中国居民的生活方式与主观幸福感研究 ———基于 CGSS2015 数据的实证分析"](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDPREP&filename=GHXY201901036&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDUwMDNMdXhZUzdEaDFUM3FUcldNMUZyQ1VSTE9mWXVkbkZ5cm1VcnZMSWlYVGQ3RzRIOWpNcm85R1lvUjhlWDE=)</p>
   
 ## **经济背景**
 >　　“幸福感数据”被广泛应用于分析微观经济现象和对非市场商品的价值评估中（如健康状况、气候和噪音代价等），同时幸福感可能是经济结果的决定因素：它提高了生产力，预示了未来收入，影响了劳动力市场的表现。越来越多的幸福感研究表明，性格特征在理解幸福感和经济结果间联系方面起着重要作用。同时，相当数量的实证研究表明，幸福感更高的个体通常在工作中有更佳的表现，且在求职过程中也更为顺利
-    <p align="right">[*"经济学家为什么研究幸福感？"*](https://mp.weixin.qq.com/s/8Uahhbi6AfRWz6w6WZxqIg)</p>
+    <p align="right">["经济学家为什么研究幸福感？"](https://mp.weixin.qq.com/s/8Uahhbi6AfRWz6w6WZxqIg)</p>
   
 ## **社会认知背景**
 >　　Akerlof 和Kranton将身份定义为一种社会类别的归属感，同时考虑到该类别中的人应如何行事。例如，一种社会分类是按性别分类，性别身份认同不仅会对男女教育程度差异、性别工资差异产生影响，也会对家庭中家务劳动和家庭权利的分配产生影响，从而影响处于婚姻中个体的生活幸福感。
-  <p align="right">[*"家庭内部相对收入、性别身份认同与中国居民生活幸福感——基于CGSS数据的实证研究"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2018&filename=JJPL201806010&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDc4ODV4WVM3RGgxVDNxVHJXTTFGckNVUkxPZll1ZG5GeXJtVWJ6Tkx5ZmJZckc0SDluTXFZOUVaSVI4ZVgxTHU=)</p>
+  <p align="right">["家庭内部相对收入、性别身份认同与中国居民生活幸福感——基于CGSS数据的实证研究"](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2018&filename=JJPL201806010&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MDc4ODV4WVM3RGgxVDNxVHJXTTFGckNVUkxPZll1ZG5GeXJtVWJ6Tkx5ZmJZckc0SDluTXFZOUVaSVI4ZVgxTHU=)</p>
 　　信仰和价值观对于主观幸福感的影响是不容忽视的，弗洛伊德认为，宗教信仰对个体的思想和行为具有引导功能，宗教文化在精神上的保护功能有利于使得人类感知到幸福。
-  <p align="right">[*"宗教信仰、社会支持与居民幸福感——基于CGSS2015数据的实证研究"*](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2018&filename=RELI201803017&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MjMyMTN5cm1Wci9KTnlqSFo3RzRIOW5Nckk5RVk0UjhlWDFMdXhZUzdEaDFUM3FUcldNMUZyQ1VSTE9mWXVkbkY=)</p>
+  <p align="right">["宗教信仰、社会支持与居民幸福感——基于CGSS2015数据的实证研究"](http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDLAST2018&filename=RELI201803017&uid=WEEvREcwSlJHSldRa1FhdkJkVG1BSEZSSWpFSHhPZk1naVBDYnhQWVREST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MjMyMTN5cm1Wci9KTnlqSFo3RzRIOW5Nckk5RVk0UjhlWDFMdXhZUzdEaDFUM3FUcldNMUZyQ1VSTE9mWXVkbkY=)</p>
   
 ## **现实背景**
 >　　据联合国发布的《世界幸福报告》显示,在156个受调查的国家中,2016-2018年中国的幸福感排名93，2010年起我国GDP总量已经超过日本, 成为仅次于美国的世界第二大经济体,但居民的幸福感排名却落后于大多数国家。
 
 ```{r}
-image_path = "image_one.png"  
+image_path = "images/image_one.png"  
 rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 ```
-　　从2005-2008到2016-2018，中国的幸福感排名增加了0.426，这表明近年来随着政府对民生问题的关注以及相关政策的实施,我国国民幸福感在逐渐提升。但这一表现仍与我国经济增长速度并不匹配。因此, 有必要进一步研究影响国民幸福感的深层次原因。      
+>　　从2005-2008到2016-2018，中国的幸福感排名增加了0.426，这表明近年来随着政府对民生问题的关注以及相关政策的实施,我国国民幸福感在逐渐提升。但这一表现仍与我国经济增长速度并不匹配。因此, 有必要进一步研究影响国民幸福感的深层次原因。      
 
 ```{r}
-image_path = "image_two.png"  
+image_path = "images/image_two.png"  
 rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 ```
-  　　
-　　该报告中幸福感排名是基于对调查中提出的主要生活评估问题的回答。它要求受访者将自己当前的生活评定为0到10级，其中最好的可能生活是10级，最坏的可能生活是0级，这也叫做Cantril阶梯（Cantril Ladder）。此外，报告中统计了另外两个衡量幸福感的指标（积极影响、消极影响）和六个反应居民生活水平的变量。从报告中我们可以发现，中国的Ladder排名为93，Ladder的标准差排名为72，积极影响排名为21，消极影响排名为11，社会支持排名为108，自由程度排名为31，慷慨程度为133，人均GDP排名为68，预期寿命排名为34。 
+>　　该报告中幸福感排名是基于对调查中提出的主要生活评估问题的回答。它要求受访者将自己当前的生活评定为0到10级，其中最好的可能生活是10级，最坏的可能生活是0级，这也叫做Cantril阶梯（Cantril Ladder）。此外，报告中统计了另外两个衡量幸福感的指标（积极影响、消极影响）和六个反应居民生活水平的变量。从报告中我们可以发现，中国的Ladder排名为93，Ladder的标准差排名为72，积极影响排名为21，消极影响排名为11，社会支持排名为108，自由程度排名为31，慷慨程度为133，人均GDP排名为68，预期寿命排名为34。 
   
 ```{r}
-image_path = "image_three.png"  
+image_path = "images/image_three.png"  
 rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 ```
-  <p align="right">[*《世界幸福报告》*](https://s3.amazonaws.com/happiness-report/2019/WHR19.pdf)</p>
+  <p align="right">[《世界幸福报告》](https://s3.amazonaws.com/happiness-report/2019/WHR19.pdf)</p>
 
 # **数据预处理**
 
@@ -109,9 +110,8 @@ rmarkdown::html_notebook_output_img(path = image_path, format = "png")
 
 1.  读入数据
 ```{r}
-#setwd("C:/Users/ZYJ/Desktop/happinessdata")
 library(tidyverse)
-data_original<-read.csv("happiness_train_abbr.csv")
+data_original<-read.csv("data/happiness_train_abbr.csv")
 ```
  
 2.  简单观测data的头和尾
@@ -122,7 +122,7 @@ tail(data_original)   #tail()输出数据框的后5行
 3.  读入变量的含义    
 
 ```{r}
-data_index<-read.csv("happiness_index_1.csv")
+data_index<-read.csv("data/happiness_index_1.csv")
 data_index
 ```
        
@@ -453,7 +453,6 @@ for(i in 18:94)
   newcol<-data.frame(age=agenew,health=health_meanbyage)
   age_health <- rbind(age_health,newcol)
 }
-
 ```
 ```{r}
 #画出年龄与对应样本健康状况平均值均值的折线图，并画出平滑曲线
@@ -583,7 +582,6 @@ for(i in 0:60)
   newcol<-data.frame(work_year=work_yearnew,happiness=happiness_meanbywork_year)
   work_year_happiness <- rbind(work_year_happiness,newcol)
 }
-
 ```
 ```{r}
 # 画出工作年限与对应样本幸福感平均值均值的折线图，并画出平滑曲线
@@ -607,10 +605,10 @@ ggplot(workdata, aes(happiness,income,colour=happiness))+coord_flip()+
 - 由于几个收入极其大的特殊点的存在，导致收入箱型图几乎压缩为一条直线，但是可以看出，这几个特殊点的幸福值处于中等以上水平    
 
 ```{r}
-
 # 将收入极大的异常点赋值为空
 workdata$income[workdata$income>250000] <- NA
-
+```
+```{r}
 # 重新画不同幸福感样本的收入箱型图和均值
 ggplot(workdata, aes(happiness, income,colour=happiness))+coord_flip()+  
              geom_boxplot(aes(group = cut_width(happiness, 1)), outlier.alpha = 0.5)+stat_summary(fun.y=mean, geom="point", shape=1, color="red",size=4)
@@ -792,7 +790,7 @@ ggarrange(pic1,pic2,nrow=2,labels=c("(1)","(2)"))
 
 ```{r}
 library(tidyverse)
-data_original<-read.csv("happiness_train_clean.csv")
+data_original<-read.csv("data/happiness_train_clean.csv")
 #取出data中后几列，并将数据标准化,统一量纲
 data_new<-scale(data_original[,c(3:38)])
 ```
@@ -949,7 +947,7 @@ summary(gvmodel)
 
 ## **广义线性模型扩展：泊松回归**  
 
-- 当通过一系列连续型和/或类别型预测变量来预测计数型因变量时，泊松回归是常用的工具   
+- 当通过一系列连续型和/或类别型预测变量来预测计数型因变量时，泊松回归是常用的工具,我们的变量中存在大量的类别型变量，故采用泊松回归建立模型。   
 
 ```{r}
 #根据前面探索性分析的结果，我们选取宗教、婚姻、健康、年龄、收入、社会认知6个自变量进行回归
@@ -1009,7 +1007,7 @@ glm_data
 **不考虑变量间交互影响，生成模型**  
 
 ```{r}
-#不考虑变量间交互，生成模型1
+#不考虑变量间交互影响，生成模型1
 model1 <- glm(happiness~religion+marital+health+age+income+equity+inc_ability,data=glm_data,family = poisson())
 summary(model1)
 ```
@@ -1022,7 +1020,7 @@ summary(model1)
 **考虑变量间可能存在的交互影响，重新生成模型**    
 
 ```{r}
-#交互影响：即当影响行为的一个因子与另一个因子共同起作用时，它们对该行为产生与各自单独作用时截然不同的影响。例如：A对C有作用，B对C有作用，当A与B联合（A*B）时，对C产生协同或拮抗作用，这种作用称为交互作用。如果A与B对C不产生这作用，则不存在交互作用
+#考虑变量间可能存在的交互影响，生成模型2. 交互影响：即当影响行为的一个因子与另一个因子共同起作用时，它们对该行为产生与各自单独作用时截然不同的影响。例如：A对C有作用，B对C有作用，当A与B联合（A*B）时，对C产生协同或拮抗作用，这种作用称为交互作用。如果A与B对C不产生这作用，则不存在交互作用
 model2 <- glm(happiness~religion+marital+health+age+income+equity+inc_ability+age*health+age*income+health*income,data=glm_data,family = poisson())
 summary(model2)
 ```
@@ -1059,7 +1057,7 @@ model3 <- step(model2)
 summary(model3)
 ```
 
-- 逐步回归由系统自动挑选最佳的回归方程，我们可以看到系统自动去掉了不显著的交互项，级该交互效应在我们所研究的问题上没有统计学上的意义。    
+- 逐步回归由系统自动挑选最佳的回归方程，我们可以看到系统自动去掉了不显著的交互项，级该交互效应在我们所研究的问题上没有统计学上的意义。最终得到的公式为 formula = happiness ~ religion + health + age + equity + inc_ability    
 
 
 ## **有序因变量回归**
@@ -1139,7 +1137,7 @@ fmdata$view <- as.factor(fmdata$view)
 ```
 
 ```{r}
-#选用cumalative link model模型进行拟合
+#选取调查类型(surv_type)、性别(gender)、教育(edu1)、健康(health）、收入(income1)、社会公平(equity)、社会观点一致性(view)、收入合理性(inc_ability)8个自变量进行回归,选用cumalative link model模型进行拟合
 fm1 <- clm(happy ~ survey_type + gender + edu1 + income1 + health + equity + view + inc_ability,data=fmdata)
 
 summary(fm1)
@@ -1196,10 +1194,11 @@ plot(dat3,facet = TRUE)+
 library(ROSE)
 #在决策树中，我们采用和泊松回归同样的变量，将泊松回归整理过的数据集读入
 tree_data <- glm_data
+```
+```{r}
 #将幸福感重新转换为因子型
 tree_data$happiness <- factor(tree_data$happiness)
 ```
-
 ```{r}
 #由于模型需要，将幸福感分为“happy”和“unhappy”分成两类
 tree_data$happiness <- as.character(tree_data$happiness)
@@ -1235,25 +1234,21 @@ rpart2 <- train(happiness~religion+marital+health+age+income+equity+inc_ability,
 ```
 
 ```{r}
-#混淆矩阵
+#不平衡数据生成模型的混淆矩阵 
 confusionMatrix(rpart1)
+```
+```{r}
+#平衡数据生成模型的混淆矩阵 
 confusionMatrix(rpart2)
 ```
 
-- 可以看出，对于未平衡的数据，正确率约为79%，对于平衡后的数据集，正确率约为67%    
-- 这主要是由于在非平衡数据中，模型倾向于将绝大部分的数据预测为幸福,而在平衡数据中，尽管正确率降低，但还是高于随机猜测的    
-
+- 可以看出，对于未平衡的数据，正确率约为79%，对于平衡后的数据集，正确率约为67%
+- 这主要是由于在非平衡数据中，模型倾向于将绝大部分的数据预测为幸福,而在平衡数据中，尽管正确率降低，但还是高于随机猜测的
+  
 **输入决策模型并可视化**  
 
 ```{r}
 library(rpart.plot)
-print(rpart1$finalModel)
-rpart.plot(rpart1$finalModel,extra=0,tweak=1,type=1)
-```
-  
-- 对于非平衡数据生成的决策树较为复杂  
-
-```{r}
 print(rpart2$finalModel)
 rpart.plot(rpart2$finalModel,extra=0,tweak=1,type=1)
 ```
@@ -1285,10 +1280,12 @@ plot_frq(rose_train$data$newhappy)
 
 ```
 ```{r BP,results="hide"}
+#使用caret::train()进行神经网络建模
 nnet <- train(newhappy~survey_type+gender+edu1+income1+health+equity+view+inc_ability,data=rose_train$data,"nnet")
 ```
 迭代过程太长，故不予显示。
 ```{r}
+#混淆矩阵查看模型预测准确度
 confusionMatrix(nnet)
 ```
 
@@ -1307,7 +1304,8 @@ garson(nnet)+
   theme(axis.text.x = element_text(angle = 50,hjust = 1))
 ```
 
--  由上图可以清晰地看出神经网络预测过程中各变量重要性的排序。
+-  由上图可以清晰地看出神经网络预测过程中各变量重要性的排序。   
+
 
 # **GitHub工作总结**
 
