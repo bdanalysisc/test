@@ -305,13 +305,20 @@ data<-data%>%mutate(house=ifelse(house<0,-8,house))
    
 ## **数据摘要**
 
+1. 变量维度
 ```{r}
 dim(data)
 ```
 
-
+2. summary()
 ```{r}
 summary(data)
+```
+
+3. describe()
+```{r}
+library(Hmisc)
+describe(data)
 ```
 
 #  **探索性分析EDA**     
@@ -790,7 +797,24 @@ data_original<-read.csv("happiness_train_clean.csv")
 data_new<-scale(data_original[,c(3:38)])
 ```
 
-2. 判断主成分个数
+2. 数据相关性分析
+
+```{r}
+happy<-data_original[,c(3:38)]
+library(psych)
+corr.test(happy,use="complete")
+```
+
+```{r}
+library(corrgram)
+corrgram(happy,order=T,lower.panel = panel.shade,upper.panel = panel.shade,text.panel = panel.txt,main="pie")
+
+```
+
+-  相关系数图d额色彩越深，饱和度越高，变量相关性越大，我么可知这36个变量间存在相关性。
+
+
+3. 判断主成分个数
 
 ```{r}
 library(psych)
@@ -801,7 +825,7 @@ fa.parallel(data_new,n.iter = 100)
 
 - 根据结果提取11个主成分
 
-3. 提取主成分
+4. 提取主成分
 ```{r} 
 pc<-principal(data_new,nfactors = 11,rotate = "none")
 pc
@@ -815,7 +839,7 @@ pc
 ```
 
    
-4. 主成分旋转  
+5. 主成分旋转  
 
 - 旋转是一系列将成分载荷阵变得更容易解释的数学方法,其中正交旋转是方差极大旋转,它试图对载荷阵的列进行去 噪,使得每个成分只是由一组有限的变量来解释(即载荷阵每列只有少数几个很大的载荷，其他 都是很小的载荷)。  
 
@@ -838,7 +862,7 @@ rc
     11). PC11在income和family_income这两个变量上的载荷较大,可以解释为"收入"变量,解释了happiness变量3%的方差.       
     综上,11个主成分旋转后的累积方差解释性为57%
 
-5. 获取主成分得分
+6. 获取主成分得分
 
 ```{r results="hide"}
 library(psych)
